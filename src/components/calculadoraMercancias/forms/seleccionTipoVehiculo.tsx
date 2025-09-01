@@ -28,7 +28,7 @@ export default function SeleccionTipoVehiculo() {
         <div className="flex flex-col gap-5 ">
             <SectionTitle title="Seleccion tipo vehículo" />
             <SectionContainer subSectionTitle="Datos iniciales">
-                <div className="flex flex-col gap-10 px-15 py-10">
+                <div className="flex flex-col gap-10 px-15 py-10 justify-center">
                     <div className="flex flex-row gap-3 w-full align-center items-center">
                         <h3>Tipo de vehículo:</h3>
                         <SeleccionVehiculo onSelectVehiculo={onSelectVehiculo} />
