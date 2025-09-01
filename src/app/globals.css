@@ -4,7 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-red: #fd0000
+  --color-red: #fd0000;
+  --color-leftbar-gray: #f2f2f2
 }
 
 @theme inline {
