@@ -18,9 +18,6 @@ export default function CalculadoraMercancias() {
                     <CalculoCosteMercancias/>
                 </div>
             </div>
-            
-            
-
         </>
 
     );

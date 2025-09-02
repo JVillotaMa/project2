@@ -2,7 +2,7 @@
 import NavigationLeftBar from "../shared/leftbar/navigationLeftBar";
 import SeleccionTipoVehiculo from "./forms/seleccionTipoVehiculo";
 import { SelectView } from "@/lib/types";
-import DatosGenerales from "./forms/datosGenerales";
+import DatosGenerales from "../calculadoraTransportes/forms/datosGenerales";
 import React from "react";
 import ButtonsNavigation from "../shared/ButtonNavigation";
 import TituloSeccion from "../shared/leftbar/TituloSeccion";
