@@ -3,7 +3,7 @@ import Navbar from "../shared/Navbar";
 import ObservatorioAdvise from "../shared/ObservatorioAdvise";
 import CalculoCosteTransportes from "./calculoCosteTransporte";
 import ImageTitle from "./ImageTitle";
-
+import { TransportesFormProvider } from "@/lib/calculadoraTransportes/TransportesFormContext";
 
 export default function CalculadoraTransportes() {
     return (
@@ -16,11 +16,10 @@ export default function CalculadoraTransportes() {
                         <ObservatorioAdvise/>
                     </div>
                 </div>
-                <div>
+                <TransportesFormProvider>
                     <CalculoCosteTransportes/>
-                </div>
+                </TransportesFormProvider>
             </div>
         </>
-
     );
 }
