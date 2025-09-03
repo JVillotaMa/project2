@@ -10,6 +10,8 @@ import DatosGenerales from "./forms/datosGenerales";
 import DatosDelVehiculo from "./forms/datosDelVehiculo";
 import DatosDeCirculación from "./forms/datosDeCirculacion";
 import Resultados from "./forms/resultados";
+import ResultsButton from "../shared/resultsButton";
+import { tree } from "next/dist/build/templates/app-page";
 
 export default function CalculoCosteTransportes() {
     const [viewIndex, setViewIndex] = React.useState(0);
@@ -41,7 +43,7 @@ export default function CalculoCosteTransportes() {
                     <ButtonsNavigation onClick={() => handleClick(1)} text="Datos del vehículo" index={1} isSelected={viewIndex == 1} />
                     <ButtonsNavigation onClick={() => handleClick(2)} text="Datos de circulación" index={2} isSelected={viewIndex == 2} />
                     <br />
-                    <ButtonsNavigation onClick={() => handleClick(3)} text="Resultados" index={3} isSelected={viewIndex == 3} />
+                    <ResultsButton disabled={/** All the validations must be correct  */ false} onClick={() => handleClick(3)} text="Resultados" index={3} isSelected={viewIndex == 3} />
 
                 </NavigationLeftBar>
             </div>

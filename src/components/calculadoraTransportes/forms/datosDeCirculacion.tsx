@@ -13,7 +13,7 @@ export default function DatosDeCirculación() {
                    <SectionContainer subSectionTitle="Datos de circulación">
                         <div className="flex justify-center">
                             <form className="flex flex-col gap-3 p-10">
-                                <FormInput label="Kilómetros recorridos al año por el vehículo-:" />
+                                <FormInput label="Kilómetros recorridos al año por el vehículo:" />
                                 <FormInput label="Coste del combustible (€/litro):" />
                                 <FormInput label="Coste de cada neumático del vehículo (€):" />
                                 <FormInput label="Vida útil de cada neumático (Km):" />
