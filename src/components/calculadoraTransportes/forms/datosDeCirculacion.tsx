@@ -17,7 +17,7 @@ export default function DatosDeCirculación() {
     }, [markAsVisited]);
     
     // Handle number input changes
-    const handleInputChange = (name: string, value: number) => {
+    const handleInputChange = (name: string, value: number | undefined) => {
         updateFormData({ [name]: value });
     };
     
