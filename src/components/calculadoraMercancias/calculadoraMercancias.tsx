@@ -2,6 +2,7 @@ import ImageTitle from "./ImageTitle";
 import Navbar from "../shared/Navbar";
 import ObservatorioAdvise from "../shared/ObservatorioAdvise";
 import CalculoCosteMercancias from "./calculoCosteMercancias";
+import { MercanciasFormProvider } from "@/lib/calculadoraMercancias/MercanciasFormContext";
 
 export default function CalculadoraMercancias() {
     return (
@@ -15,10 +16,11 @@ export default function CalculadoraMercancias() {
                     </div>
                 </div>
                 <div>
-                    <CalculoCosteMercancias/>
+                    <MercanciasFormProvider>
+                        <CalculoCosteMercancias/>
+                    </MercanciasFormProvider>
                 </div>
             </div>
         </>
-
     );
 }

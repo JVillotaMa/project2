@@ -21,6 +21,7 @@ export default function FormInput({ label, name, value, onChange, error, default
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // Just update the local state, don't update the form context yet
+        e.preventDefault()
         setInputValue(e.target.value);
     };
     

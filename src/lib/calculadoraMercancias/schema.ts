@@ -48,12 +48,13 @@ export const impuestosSchema = z.object({
   costeAdr: z.number().min(0, "El campo Coste ADR debe estar relleno"),
 });
 
-// -------------------- Seguros --------------------
 export const segurosSchema = z.object({
+  tipoSeguro: z.enum(["Obligatorios", "ObligatoriosTerceros", "TodoRiesgo"], {
+    message: "Debe seleccionar un tipo de seguro"
+  }),
   costeSeguroAnual: z.number().min(0, "El campo Coste del seguro anual debe estar relleno"),
   seguroMercancia: z.number().min(0, "El campo Seguro de mercancía debe estar relleno"),
   responsabilidadCivil: z.number().min(0, "El campo Responsabilidad civil debe estar relleno"),
-  otrosCostesFijos: z.number().min(0, "El campo Otros costes fijos debe estar relleno"),
 });
 
 // ---------------------Otros costes--------------------
@@ -101,4 +102,4 @@ export const calculadoraMercanciasSchema = vehiculoSchema
   .merge(otrosCostesSchema)
   .merge(neumaticosYCombustibleSchema)
   .merge(dietasYPeajesSchema)
-  .merge(costesIndirectosSchema);
+  .merge(costesIndirectosSchema).merge(mantenimientoSchema);
