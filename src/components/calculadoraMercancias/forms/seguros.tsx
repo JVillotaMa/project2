@@ -27,6 +27,8 @@ export default function Seguros() {
         // Actualizar el tipo de seguro en el formData
         updateFormData({ tipoSeguro: value });
         
+        //Limpiar el input anterior
+        updateFormData({ costeSeguroAnual: undefined });
 
     };
 
@@ -68,14 +70,15 @@ export default function Seguros() {
                                 onValueChange={handleOptionChange}
                                 defaultValue="Obligatorios"
                             >
-                                <div className="flex items-center space-x-2 justify-between">
-                                    <div className="flex items-center space-x-2">
+                                <div className="flex flex-row justify-between">
+                                    <div className="flex items-center space-x-2 w-[50%]">
                                         <RadioGroupItem 
                                             value="Obligatorios" 
                                             id="Obligatorios"
                                         />
-                                        <label htmlFor="option-one">Solo obligatorios</label>
+                                        <label htmlFor="Obligatorios">Solo obligatorios</label>
                                     </div>
+                                    
                                     {optionSelected === "Obligatorios" && 
                                         <FormInput 
                                             label="" 
@@ -86,6 +89,7 @@ export default function Seguros() {
                                             defaultValue={7000}
                                         />
                                     }
+                                    
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-2">

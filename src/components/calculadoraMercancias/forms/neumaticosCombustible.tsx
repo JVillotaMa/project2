@@ -1,4 +1,5 @@
 'use client'
+import CalculationField from "@/components/shared/calculationField";
 import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
@@ -62,7 +63,10 @@ export default function NeumaticosCombustible() {
                             error={getErrorMessage('descuentoMedioNeumaticos')}
                             defaultValue={10}
                         />
-                        <br />
+                        <CalculationField 
+                            label="Precio medio neumático (€/unidad)" 
+                            value={(formData.precioBrutoNeumaticos ? formData.precioBrutoNeumaticos : 0) * 
+                                    ((formData.descuentoMedioNeumaticos ? formData.descuentoMedioNeumaticos : 0) / 100)}/>
                         <FormInput 
                             label="Duración media neumáticos (km)" 
                             name="duracionMediaNeumaticosKm"
@@ -101,7 +105,10 @@ export default function NeumaticosCombustible() {
                             error={getErrorMessage('descuentoMedioConbustible')}
                             defaultValue={5}
                         />
-                        <br />
+                        <CalculationField 
+                            label="Precio del gasóleo (€/litro)" 
+                            value={(formData.precioBrutoGasoleoSinIva ? formData.precioBrutoGasoleoSinIva : 0) * 
+                                    ((formData.descuentoMedioConbustible ? formData.descuentoMedioConbustible : 0) / 100)}/>
                         <FormInput 
                             label="Consumo medio (lit/100km):" 
                             name="consumoMedioVehiculo100km"

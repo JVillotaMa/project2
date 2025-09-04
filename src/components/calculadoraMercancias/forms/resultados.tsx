@@ -4,7 +4,8 @@ import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function Resultados() {
     const { formData, updateFormData, isFormValid } = useMercanciasForm();
@@ -12,6 +13,7 @@ export default function Resultados() {
     const [optionSelected, setOptionSelected] = React.useState("option-one");
     const [kilometrosServicio, setKilometrosServicio] = React.useState<number | undefined>(undefined);
     const [horasServicio, setHorasServicio] = React.useState<number | undefined>(undefined);
+    const [modalOpen, setModalOpen] = useState(false);
     
     // Handle number input changes for kilometros
     const handleKilometrosChange = (_name: string, value: number | undefined) => {
@@ -78,12 +80,31 @@ export default function Resultados() {
                                 />
                             </>
                         )}
-                        
                         {!isFormValid && (
                             <div className="text-red-500 mt-4 p-3 bg-red-50 rounded-md">
                                 Para ver los resultados, debe completar correctamente todos los campos del formulario.
                             </div>
                         )}
+                        
+                        {/* Botón calcular */}
+                        <div className="flex justify-center mt-6">
+                            <button
+                                type="button"
+                                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition"
+                                onClick={() => setModalOpen(true)}
+                                disabled={optionSelected === "option-two" && (!kilometrosServicio || !horasServicio) }
+                            >
+                                Calcular
+                            </button>
+                        </div>
+                        
+                        {/* Modal */}
+                        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                            <DialogContent>
+                                <DialogTitle>Información</DialogTitle>
+                                <div className="py-4 text-center">Todavía no está implementado el cálculo.</div>
+                            </DialogContent>
+                        </Dialog>
                     </form>
                 </div>
             </SectionContainer>

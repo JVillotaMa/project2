@@ -271,11 +271,19 @@ export function MercanciasFormProvider({ children }: { children: React.ReactNode
     try {
       if (visitedSections.amortizacionYFinanciacion) {
         const amortizacionData = {
+          // Cabeza tractora
           precioVentaSinIvaCabezaTractora: formData.precioVentaSinIvaCabezaTractora,
+          descuentoMedioSobreTarifaCabezaTractora: formData.descuentoMedioSobreTarifaCabezaTractora,
+          valorResidualPorcentajeCabezaTractora: formData.valorResidualPorcentajeCabezaTractora,
+          periodoAmortizacionCabezaTractora: formData.periodoAmortizacionCabezaTractora,
+          
+          // Remolque
           precioVentaSinIvaRemolque: formData.precioVentaSinIvaRemolque,
-          descuentoMedioSobreTarifa: formData.descuentoMedioSobreTarifa,
-          valorResidualPorcentaje: formData.valorResidualPorcentaje,
-          periodoAmortizacion: formData.periodoAmortizacion,
+          descuentoMedioSobreTarifaRemolque: formData.descuentoMedioSobreTarifaRemolque,
+          valorResidualPorcentajeRemolque: formData.valorResidualPorcentajeRemolque,
+          periodoAmortizacionRemolque: formData.periodoAmortizacionRemolque,
+          
+          // Financiación
           cuantiaAFinanciar: formData.cuantiaAFinanciar,
           periodoAFinanciar: formData.periodoAFinanciar,
           tipoInteresAnual: formData.tipoInteresAnual,
@@ -283,11 +291,19 @@ export function MercanciasFormProvider({ children }: { children: React.ReactNode
         
         // Check if all fields have been filled by the user
         const hasAllFields = 
+          // Cabeza tractora
           amortizacionData.precioVentaSinIvaCabezaTractora !== undefined && 
+          amortizacionData.descuentoMedioSobreTarifaCabezaTractora !== undefined && 
+          amortizacionData.valorResidualPorcentajeCabezaTractora !== undefined && 
+          amortizacionData.periodoAmortizacionCabezaTractora !== undefined && 
+          
+          // Remolque
           amortizacionData.precioVentaSinIvaRemolque !== undefined && 
-          amortizacionData.descuentoMedioSobreTarifa !== undefined && 
-          amortizacionData.valorResidualPorcentaje !== undefined && 
-          amortizacionData.periodoAmortizacion !== undefined && 
+          amortizacionData.descuentoMedioSobreTarifaRemolque !== undefined && 
+          amortizacionData.valorResidualPorcentajeRemolque !== undefined && 
+          amortizacionData.periodoAmortizacionRemolque !== undefined && 
+          
+          // Financiación
           amortizacionData.cuantiaAFinanciar !== undefined && 
           amortizacionData.periodoAFinanciar !== undefined && 
           amortizacionData.tipoInteresAnual !== undefined;
@@ -314,11 +330,19 @@ export function MercanciasFormProvider({ children }: { children: React.ReactNode
       }
     }
   }, [
+    // Cabeza tractora
     formData.precioVentaSinIvaCabezaTractora,
+    formData.descuentoMedioSobreTarifaCabezaTractora,
+    formData.valorResidualPorcentajeCabezaTractora,
+    formData.periodoAmortizacionCabezaTractora,
+    
+    // Remolque
     formData.precioVentaSinIvaRemolque,
-    formData.descuentoMedioSobreTarifa,
-    formData.valorResidualPorcentaje,
-    formData.periodoAmortizacion,
+    formData.descuentoMedioSobreTarifaRemolque,
+    formData.valorResidualPorcentajeRemolque,
+    formData.periodoAmortizacionRemolque,
+    
+    // Financiación
     formData.cuantiaAFinanciar,
     formData.periodoAFinanciar,
     formData.tipoInteresAnual,

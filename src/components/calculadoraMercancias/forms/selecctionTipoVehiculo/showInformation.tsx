@@ -40,7 +40,7 @@ export default function ShowInformation({
                     <span className="font-bold text-gray-700">{title}</span>
                 </div>
                 <div className="block">
-                    <span className={error ? "text-red-500 font-medium" : "font-medium text-blue-600"}>
+                    <span className={error ? "text-red-500 font-medium" : "font-medium "}>
                         {displayValue()}
                     </span>
                 </div>

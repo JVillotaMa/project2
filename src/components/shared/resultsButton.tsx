@@ -15,12 +15,12 @@ export default function ResultsButton({ text, onClick, index, isSelected, disabl
     
     // Selected state
     if (isSelected) {
-        buttonStyle += "border-2 border-green-700 ";
+        buttonStyle += "border-2 border-[#8BC79E] ";
     }
     
     // Styling based on form validity
     if (isFormValid) {
-        buttonStyle += "bg-green-600 hover:bg-green-700 text-white ";
+        buttonStyle += "bg-black text-white hover:bg-gray-700 ";
     } else {
         buttonStyle += "bg-black text-white hover:bg-gray-700 ";
     }

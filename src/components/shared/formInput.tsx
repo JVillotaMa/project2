@@ -61,10 +61,10 @@ export default function FormInput({ label, name, value, onChange, error, default
     };
     
     return (
-        <div className="flex flex-col gap-1 w-full">
+        <div className="flex flex-col gap-1 ">
             <div className="flex justify-between gap-10 align-middle items-center">
                 <span className="font-semibold">{label}</span>
-                <div className="flex flex-row gap-4">
+                <div className="flex flex-row gap-2 items-center">
                     <input 
                         className={`border-2 ${getBorderStyle()}`}
                         type="number" 

@@ -19,15 +19,22 @@ export const datosGeneralesSchema = z.object({
 
 // -------------------- Amortización y financiación --------------------
 export const amortizacionYFinanciacionSchema = z.object({
+  // Cabeza tractora
   precioVentaSinIvaCabezaTractora: z.number().min(1, "El campo Precio de venta sin IVA de la cabeza tractora debe estar relleno"),
+  descuentoMedioSobreTarifaCabezaTractora: z.number().min(0, "El campo Descuento medio sobre tarifa de la cabeza tractora debe estar relleno").max(100, "El campo Descuento medio sobre tarifa de la cabeza tractora no puede ser mayor de 100"),
+  valorResidualPorcentajeCabezaTractora: z.number().min(0, "El campo Valor residual de la cabeza tractora (%) debe estar relleno").max(100, "El campo Valor residual de la cabeza tractora (%) no puede ser mayor de 100"),
+  periodoAmortizacionCabezaTractora: z.number().min(1, "El campo Periodo de amortización de la cabeza tractora (años) debe estar relleno"),
+  
+  // Remolque
   precioVentaSinIvaRemolque: z.number().min(0, "El campo Precio de venta sin IVA del remolque debe estar relleno"),
-  descuentoMedioSobreTarifa: z.number().min(0, "El campo Descuento medio sobre tarifa debe estar relleno").max(100, "El campo Descuento medio sobre tarifa no puede ser mayor de 100"),
-  valorResidualPorcentaje: z.number().min(0, "El campo Valor residual (%) debe estar relleno").max(100, "El campo Valor residual (%) no puede ser mayor de 100"),
-  periodoAmortizacion: z.number().min(1, "El campo Periodo de amortización (años) debe estar relleno"),
+  descuentoMedioSobreTarifaRemolque: z.number().min(0, "El campo Descuento medio sobre tarifa del remolque debe estar relleno").max(100, "El campo Descuento medio sobre tarifa del remolque no puede ser mayor de 100"),
+  valorResidualPorcentajeRemolque: z.number().min(0, "El campo Valor residual del remolque (%) debe estar relleno").max(100, "El campo Valor residual del remolque (%) no puede ser mayor de 100"),
+  periodoAmortizacionRemolque: z.number().min(1, "El campo Periodo de amortización del remolque (años) debe estar relleno"),
+  
+  // Financiación
   cuantiaAFinanciar: z.number().min(0, "El campo Cuantía a financiar debe estar relleno"),
   periodoAFinanciar: z.number().min(1, "El campo Periodo a financiar (años) debe estar relleno"),
   tipoInteresAnual: z.number().min(0, "El campo Tipo de interés anual (%) debe estar relleno").max(100, "El campo Tipo de interés anual (%) no puede ser mayor de 100"),
-
 });
 
 // -------------------- Personal --------------------

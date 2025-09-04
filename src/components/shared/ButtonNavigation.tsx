@@ -16,18 +16,18 @@ export default function ButtonsNavigation({ text, onClick, index, isSelected, va
     
     // If the button is selected, add a border
     if (isSelected) {
-        buttonStyle += "border-2 border-green-700 ";
+        buttonStyle += "border-2 border-[#8BC79E] ";
     }
     
     // Apply different styles based on validation status
     switch (validationStatus) {
         case 'unvisited':
             // Default style, no special styling
-            backgroundStyle = "bg-white hover:bg-green-50";
+            backgroundStyle = "bg-white hover:bg-[#E8F5EB]";
             break;
         case 'incomplete':
             // Gradient from green to white (50%)
-            backgroundStyle = "bg-gradient-to-r from-green-500 to-white";
+            backgroundStyle = "bg-gradient-to-r from-[#B2E0BC] to-white";
             break;
         case 'invalid':
             // Red background for errors
@@ -35,7 +35,7 @@ export default function ButtonsNavigation({ text, onClick, index, isSelected, va
             break;
         case 'valid':
             // Green background for valid
-            backgroundStyle = "bg-green-500 text-white hover:bg-green-600";
+            backgroundStyle = "bg-[#B2E0BC] text-gray-800 hover:bg-[#A2D4AD]";
             break;
     }
     
