@@ -34,7 +34,8 @@ export default function DatosDeCirculación() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.datosCirculacion.format();
-        const fieldError = fieldErrors[fieldName];
+        // Access the field error with a type assertion to avoid the symbol index type error
+        const fieldError = (fieldErrors as Record<string, { _errors: string[] }>)[fieldName];
         
         return fieldError?._errors?.[0];
     };
@@ -45,7 +46,7 @@ export default function DatosDeCirculación() {
             
             <SectionContainer subSectionTitle="Datos de circulación">
                 <div className="flex justify-center">
-                    <form className="flex flex-col gap-3 p-10 w-full">
+                    <form className="flex flex-col gap-3 p-4 sm:p-10 w-full">
                         <FormInput 
                             label="Kilómetros recorridos al año por el vehículo:" 
                             name="kilometrosAnuales"

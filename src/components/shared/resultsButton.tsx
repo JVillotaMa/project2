@@ -11,7 +11,7 @@ interface ResultsButtonProps {
 
 export default function ResultsButton({ text, onClick, index, isSelected, disabled, isFormValid = false }: ResultsButtonProps) {
     // Base styles
-    let buttonStyle = "w-full hover:cursor-pointer font-bold ";
+    let buttonStyle = "w-full hover:cursor-pointer font-bold text-sm sm:text-base md:text-sm lg:text-base py-2 ";
     
     // Selected state
     if (isSelected) {
@@ -31,7 +31,7 @@ export default function ResultsButton({ text, onClick, index, isSelected, disabl
     }
     
     return (
-        <div className="my-1 mx-5">
+        <div className="my-1 mx-2 sm:mx-5">
             <Button 
                 disabled={disabled} 
                 className={buttonStyle} 
@@ -41,7 +41,7 @@ export default function ResultsButton({ text, onClick, index, isSelected, disabl
                 {text}
             </Button>
             {disabled && !isFormValid && (
-                <p className="text-sm text-red-500 mt-1 text-center">
+                <p className="text-xs sm:text-sm md:text-xs lg:text-sm text-red-500 mt-1 text-center">
                     Complete todos los campos antes de ver resultados
                 </p>
             )}

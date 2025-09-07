@@ -41,8 +41,8 @@ export default function CalculoCosteTransportes() {
     const isResultsDisabled = !isFormValid;
 
     return (
-        <div className="flex flex-row">
-            <div id="left-bar">
+        <div className="flex flex-col md:flex-row">
+            <div id="left-bar" className="w-full md:w-auto">
                 <NavigationLeftBar>
                     <TituloSeccion titulo="Secciones" />
                     <ButtonsNavigation 
@@ -77,7 +77,7 @@ export default function CalculoCosteTransportes() {
                     />
                 </NavigationLeftBar>
             </div>
-            <div id="form" className="block w-full">
+            <div id="form" className="w-full p-4">
                 <RenderForm index={viewIndex} />
             </div>
         </div>

@@ -43,7 +43,8 @@ export default function DatosGenerales() {
         // Get error from Zod validation
         const fieldErrors = validationErrors.datosGenerales.format();
 
-        const fieldError = fieldErrors[fieldName];
+        // This is valid as fieldErrors is a dynamically structured object from Zod
+        const fieldError = (fieldErrors as Record<string, { _errors: string[] }>)[fieldName];
         
         return fieldError?._errors?.[0];
     };
@@ -54,14 +55,13 @@ export default function DatosGenerales() {
             
             <SectionContainer subSectionTitle="Seleccione el tipo de autobús">
                 <div className="flex justify-center">
-                    <form className="flex flex-col gap-3 p-10">
+                    <form className="flex flex-col gap-3 p-4 sm:p-10 w-full">
                         <RadioGroup
                             value={formData.tipoDeAutobus || ""}
                             onValueChange={handleTipoAutobusChange}
-
-                            className="flex flex-row justify-evenly gap-10"
+                            className="flex flex-col sm:flex-row justify-evenly gap-4 sm:gap-10"
                         >
-                            <div className="flex flex-col">
+                            <div className="flex flex-col gap-2">
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="Menos de 22 plazas" id="option-one" className="h-4 w-4 border border-gray-300 rounded-full" />
                                     <label htmlFor="option-one">Menos de 22 plazas</label>
@@ -71,7 +71,7 @@ export default function DatosGenerales() {
                                     <label htmlFor="option-two">De 22 a 35 plazas</label>
                                 </div>
                             </div>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col gap-2">
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="De 36 a 55 plazas" id="option-three" className="h-4 w-4 border border-gray-300 rounded-full" />
                                     <label htmlFor="option-three">De 36 a 55 plazas</label>
@@ -90,7 +90,7 @@ export default function DatosGenerales() {
             </SectionContainer>
             
             <SectionContainer subSectionTitle="Datos del conductor">
-                <div className="p-10 flex justify-center">
+                <div className="p-4 sm:p-10 flex justify-center">
                     <div className="flex justify-center flex-col gap-2 w-full">
                         <FormInput 
                             label="Salario anual del conductor (€):" 
@@ -113,7 +113,7 @@ export default function DatosGenerales() {
             </SectionContainer>
             
             <SectionContainer subSectionTitle="Costes generales">
-                <div className="p-10 flex justify-center">
+                <div className="p-4 sm:p-10 flex justify-center">
                     <FormInput 
                         label="Costes generales (% sobre el coste total):" 
                         name="costesGenerales"

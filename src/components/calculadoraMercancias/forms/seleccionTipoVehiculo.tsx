@@ -125,7 +125,8 @@ export default function SeleccionTipoVehiculo() {
 
         // Get error from Zod validation
         const fieldErrors = validationErrors.vehiculo.format();
-        const fieldError = fieldErrors[fieldName];
+        // This is valid as fieldErrors is a dynamically structured object from Zod
+        const fieldError = fieldErrors[fieldName as keyof typeof fieldErrors];
 
         return fieldError?._errors?.[0];
     };
@@ -139,16 +140,16 @@ export default function SeleccionTipoVehiculo() {
     };
 
     return (
-        <div className="flex flex-col gap-5 ">
+        <div className="flex flex-col gap-5">
             <SectionTitle title="Seleccion tipo vehículo" />
             <SectionContainer subSectionTitle="Datos iniciales">
-                <div className="flex flex-col gap-10 py-10 justify-center items center">
-                    <div className="flex flex-row gap-3 w-full align-center items-center justify-center">
-                        <h3 className="text-lg font-semibold min-w-[160px]">Tipo de vehículo:</h3>
+                <div className="flex flex-col gap-6 sm:gap-10 py-5 sm:py-10 justify-center items-center">
+                    <div className="flex flex-col sm:flex-row gap-3 w-full align-center items-center justify-center">
+                        <h3 className="text-base sm:text-lg font-semibold min-w-[160px]">Tipo de vehículo:</h3>
                         <SeleccionVehiculo onSelectVehiculo={onSelectVehiculo} />
                     </div>
                     <div className="w-full flex justify-center">
-                    <div id="showVehicleData" className="flex flex-col justify-center gap-4 max-w-lg w-full p-4 rounded-md ">
+                    <div id="showVehicleData" className="flex flex-col justify-center gap-4 max-w-lg w-full p-4 rounded-md">
                         <h3 className="text-md font-semibold border-b pb-2 mb-2">
                             {indexVehiculo !== null
                                 ? <span className="">Datos del vehículo: {vehiculos[indexVehiculo].nombreVehiculo}</span>

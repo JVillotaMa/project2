@@ -34,7 +34,8 @@ export default function DatosDelVehiculo() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.datosVehiculo.format();
-        const fieldError = fieldErrors[fieldName];
+        // This is valid as fieldErrors is a dynamically structured object from Zod
+        const fieldError = (fieldErrors as Record<string, { _errors: string[] }>)[fieldName];
         
         return fieldError?._errors?.[0];
     };
@@ -45,7 +46,7 @@ export default function DatosDelVehiculo() {
             
             <SectionContainer subSectionTitle="Amortización">
                 <div className="flex justify-center">
-                    <form className="flex flex-col gap-3 p-10 w-full">
+                    <form className="flex flex-col gap-3 p-4 sm:p-10 w-full">
                         <FormInput 
                             label="Coste de adquisición (€):" 
                             name="costeDeAdquisicion"
@@ -68,7 +69,7 @@ export default function DatosDelVehiculo() {
             
             <SectionContainer subSectionTitle="Financiación">
                 <div className="flex justify-center">
-                    <form className="flex flex-col gap-3 p-10 w-full">
+                    <form className="flex flex-col gap-3 p-4 sm:p-10 w-full">
                         <FormInput 
                             label="Coste de la financiación (TAE):" 
                             name="costeFinanciacionTAE"
@@ -91,7 +92,7 @@ export default function DatosDelVehiculo() {
             
             <SectionContainer subSectionTitle="Mantenimiento y seguros">
                 <div className="flex justify-center">
-                    <form className="flex flex-col gap-3 p-10 w-full">
+                    <form className="flex flex-col gap-3 p-4 sm:p-10 w-full">
                         <FormInput 
                             label="Coste anual de mantenimiento del vehículo (€):" 
                             name="mantenimientoAnual"

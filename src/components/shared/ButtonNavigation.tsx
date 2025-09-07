@@ -11,7 +11,7 @@ interface ButtonsNavigationProps {
 
 export default function ButtonsNavigation({ text, onClick, index, isSelected, validationStatus }: ButtonsNavigationProps) {
     // Styling based on validation status
-    let buttonStyle = "w-full hover:cursor-pointer font-bold ";
+    let buttonStyle = "w-full hover:cursor-pointer font-bold text-sm sm:text-sm md:text-sm lg:text-sm py-2 ";
     let backgroundStyle = "";
     
     // If the button is selected, add a border
@@ -40,7 +40,7 @@ export default function ButtonsNavigation({ text, onClick, index, isSelected, va
     }
     
     return (
-        <div className="my-1 mx-5">
+        <div className="my-1 mx-2 ">
             <Button 
                 className={buttonStyle + backgroundStyle} 
                 variant="outline" 
