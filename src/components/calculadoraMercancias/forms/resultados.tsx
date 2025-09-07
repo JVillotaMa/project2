@@ -4,11 +4,11 @@ import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function Resultados() {
-    const { formData, updateFormData, isFormValid } = useMercanciasForm();
+    const {  isFormValid } = useMercanciasForm();
     
     const [optionSelected, setOptionSelected] = React.useState("option-one");
     const [kilometrosServicio, setKilometrosServicio] = React.useState<number | undefined>(undefined);

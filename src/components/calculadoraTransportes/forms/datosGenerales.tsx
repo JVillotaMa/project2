@@ -5,7 +5,6 @@ import FormInput from "@/components/shared/formInput";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesFormContext";
 import React, { useEffect } from "react";
-import { z } from "zod";
 
 export default function DatosGenerales() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useTransportesForm();
@@ -20,7 +19,9 @@ export default function DatosGenerales() {
     
     // Handle radio button selection
     const handleTipoAutobusChange = (value: string) => {
-        updateFormData({ tipoDeAutobus: value as any });
+        updateFormData({ 
+            tipoDeAutobus: value as "Menos de 22 plazas" | "De 22 a 35 plazas" | "De 36 a 55 plazas" | "Mas de 55 plazas" 
+        });
     };
     
     // Handle number input changes
@@ -41,7 +42,7 @@ export default function DatosGenerales() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.datosGenerales.format();
-        // @ts-ignore - Zod error format structure
+
         const fieldError = fieldErrors[fieldName];
         
         return fieldError?._errors?.[0];

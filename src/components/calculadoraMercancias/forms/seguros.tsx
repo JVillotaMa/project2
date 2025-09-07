@@ -7,7 +7,7 @@ import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormCon
 import React, { useEffect } from "react";
 
 export default function Seguros() {
-    const { formData, updateFormData, validationErrors, markAsVisited, validationStatus } = useMercanciasForm();
+    const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
     
     // Inicializar optionSelected con el valor de formData.tipoSeguro o "TodoRiesgo" (todo riesgo) por defecto
     const [optionSelected, setOptionSelected] = React.useState(formData.tipoSeguro || "Obligatorios");
@@ -51,7 +51,6 @@ export default function Seguros() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.seguros.format();
-        // @ts-ignore - Zod error format structure
         const fieldError = fieldErrors[fieldName];
         
         return fieldError?._errors?.[0];

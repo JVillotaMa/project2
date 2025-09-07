@@ -1,5 +1,4 @@
 export default function ShowInformation({ 
-    index, 
     title, 
     value, 
     error 

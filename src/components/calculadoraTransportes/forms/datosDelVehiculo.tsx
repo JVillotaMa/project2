@@ -34,7 +34,6 @@ export default function DatosDelVehiculo() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.datosVehiculo.format();
-        // @ts-ignore - Zod error format structure
         const fieldError = fieldErrors[fieldName];
         
         return fieldError?._errors?.[0];

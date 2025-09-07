@@ -1,10 +1,9 @@
 'use client'
 import NavigationLeftBar from "../shared/leftbar/navigationLeftBar";
 import { SelectView } from "@/lib/types";
-import React, { useEffect } from "react";
+import React from "react";
 import ButtonsNavigation from "../shared/ButtonNavigation";
 import TituloSeccion from "../shared/leftbar/TituloSeccion";
-import SubtituloSeccion from "../shared/leftbar/subtituloSeccion";
 import DatosGenerales from "./forms/datosGenerales";
 import DatosDelVehiculo from "./forms/datosDelVehiculo";
 import DatosDeCirculación from "./forms/datosDeCirculacion";

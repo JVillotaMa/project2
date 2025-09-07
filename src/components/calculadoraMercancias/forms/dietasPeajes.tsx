@@ -34,7 +34,6 @@ export default function DietasPeajes() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.dietasYPeajes.format();
-        // @ts-ignore - Zod error format structure
         const fieldError = fieldErrors[fieldName];
         
         return fieldError?._errors?.[0];

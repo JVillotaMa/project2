@@ -35,7 +35,6 @@ export default function NeumaticosCombustible() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.neumaticosYCombustible.format();
-        // @ts-ignore - Zod error format structure
         const fieldError = fieldErrors[fieldName];
         
         return fieldError?._errors?.[0];

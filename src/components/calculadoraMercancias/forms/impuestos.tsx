@@ -34,7 +34,6 @@ export default function Impuestos() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.impuestos.format();
-        // @ts-ignore - Zod error format structure
         const fieldError = fieldErrors[fieldName];
         
         return fieldError?._errors?.[0];

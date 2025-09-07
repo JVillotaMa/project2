@@ -34,7 +34,6 @@ export default function CostesIndirectos() {
         
         // Get error from Zod validation
         const fieldErrors = validationErrors.costesIndirectos.format();
-        // @ts-ignore - Zod error format structure
         const fieldError = fieldErrors[fieldName];
         
         return fieldError?._errors?.[0];

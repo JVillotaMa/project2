@@ -20,7 +20,7 @@ import Mantenimiento from "./forms/mantenimiento";
 import ResultsButton from "../shared/resultsButton";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
 
-export default function calculoCosteMercancias() {
+export default function CalculoCosteMercancias() {
     const [viewIndex, setViewIndex] = React.useState(0);
     const { validationStatus, markAsVisited, isFormValid } = useMercanciasForm();
 

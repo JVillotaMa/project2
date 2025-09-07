@@ -4,35 +4,15 @@ import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesFormContext";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-// Define types for results
-type CostesUnitarios = {
-    costosPorKm: {
-        amortizacion: number;
-        financiacion: number;
-        personal: number;
-        combustible: number;
-        neumaticos: number;
-        mantenimiento: number;
-        seguro: number;
-    };
-    costosTotalesPorKm: number;
-    costesGenerales: number;
-    costoFinalPorKm: number;
-    costosPorHora: number;
-};
 
-type CostesServicio = {
-    costePorKilometros: number;
-    costePorHoras: number;
-    costeTotal: number;
-};
+
 
 export default function Resultados() {
-    const { formData, isFormValid } = useTransportesForm();
+    const { isFormValid } = useTransportesForm();
     const [optionSelected, setOptionSelected] = useState("option-one");
     const [servicioData, setServicioData] = useState({
         kilometrosTrayecto: undefined,
