@@ -19,6 +19,7 @@ import SubtituloSeccion from "../shared/leftbar/subtituloSeccion";
 import Mantenimiento from "./forms/mantenimiento";
 import ResultsButton from "../shared/resultsButton";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import FormStepNavigation from "../shared/FormStepNavigation";
 
 export default function CalculoCosteMercancias() {
     const [viewIndex, setViewIndex] = React.useState(0);
@@ -62,6 +63,34 @@ export default function CalculoCosteMercancias() {
             else if (index === 9) markAsVisited('dietasYPeajes');
             else if (index === 10) markAsVisited('costesIndirectos');
         }, 0);
+    }
+
+    function handlePrevious() {
+        if (viewIndex > 0) {
+            handleClick(viewIndex - 1);
+        }
+    }
+    
+    function handleNext() {
+        if (viewIndex < selectView.length - 1) {
+            handleClick(viewIndex + 1);
+        }
+    }
+    
+    function isNextDisabled() {
+        // Disable next button if current section is invalid or incomplete
+        if (viewIndex === 0) return validationStatus.vehiculo !== 'valid';
+        if (viewIndex === 1) return validationStatus.datosGenerales !== 'valid';
+        if (viewIndex === 2) return validationStatus.amortizacionYFinanciacion !== 'valid';
+        if (viewIndex === 3) return validationStatus.personal !== 'valid';
+        if (viewIndex === 4) return validationStatus.impuestos !== 'valid';
+        if (viewIndex === 5) return validationStatus.seguros !== 'valid';
+        if (viewIndex === 6) return validationStatus.otrosCostes !== 'valid';
+        if (viewIndex === 7) return validationStatus.neumaticosYCombustible !== 'valid';
+        if (viewIndex === 8) return validationStatus.mantenimiento !== 'valid';
+        if (viewIndex === 9) return validationStatus.dietasYPeajes !== 'valid';
+        if (viewIndex === 10) return validationStatus.costesIndirectos !== 'valid';
+        return false;
     }
     
     // Determine if the results button should be disabled
@@ -164,6 +193,17 @@ export default function CalculoCosteMercancias() {
             </div>
             <div id="form" className="w-full p-4">
                 <RenderForm index={viewIndex} />
+                
+                {/* Form step navigation buttons */}
+                {viewIndex !== 11 && (
+                    <FormStepNavigation 
+                        onPrevious={handlePrevious}
+                        onNext={handleNext}
+                        isFirstStep={viewIndex === 0}
+                        isLastStep={viewIndex === selectView.length - 1}
+                        isNextDisabled={isNextDisabled()}
+                    />
+                )}
             </div>
         </div>
     )

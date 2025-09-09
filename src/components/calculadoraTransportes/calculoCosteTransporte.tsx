@@ -10,6 +10,7 @@ import DatosDeCirculación from "./forms/datosDeCirculacion";
 import Resultados from "./forms/resultados";
 import ResultsButton from "../shared/resultsButton";
 import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesFormContext";
+import FormStepNavigation from "../shared/FormStepNavigation";
 
 export default function CalculoCosteTransportes() {
     const [viewIndex, setViewIndex] = React.useState(0);
@@ -35,6 +36,26 @@ export default function CalculoCosteTransportes() {
             else if (index === 1) markAsVisited('datosVehiculo');
             else if (index === 2) markAsVisited('datosCirculacion');
         }, 0);
+    }
+
+    function handlePrevious() {
+        if (viewIndex > 0) {
+            handleClick(viewIndex - 1);
+        }
+    }
+    
+    function handleNext() {
+        if (viewIndex < selectView.length - 1) {
+            handleClick(viewIndex + 1);
+        }
+    }
+    
+    function isNextDisabled() {
+        // Disable next button if current section is invalid or incomplete
+        if (viewIndex === 0) return validationStatus.datosGenerales !== 'valid';
+        if (viewIndex === 1) return validationStatus.datosVehiculo !== 'valid';
+        if (viewIndex === 2) return validationStatus.datosCirculacion !== 'valid';
+        return false;
     }
 
     // Determine if the results button should be disabled
@@ -79,6 +100,17 @@ export default function CalculoCosteTransportes() {
             </div>
             <div id="form" className="w-full p-4">
                 <RenderForm index={viewIndex} />
+                
+                {/* Form step navigation buttons */}
+                {viewIndex !== 3 && (
+                    <FormStepNavigation 
+                        onPrevious={handlePrevious}
+                        onNext={handleNext}
+                        isFirstStep={viewIndex === 0}
+                        isLastStep={viewIndex === selectView.length - 1}
+                        isNextDisabled={isNextDisabled()}
+                    />
+                )}
             </div>
         </div>
     );

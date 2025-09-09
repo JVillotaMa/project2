@@ -126,7 +126,7 @@ export default function SeleccionTipoVehiculo() {
         // Get error from Zod validation
         const fieldErrors = validationErrors.vehiculo.format();
         // This is valid as fieldErrors is a dynamically structured object from Zod
-        const fieldError = fieldErrors[fieldName as keyof typeof fieldErrors];
+        const fieldError = (fieldErrors as Record<string, { _errors: string[] }>)[fieldName];
 
         return fieldError?._errors?.[0];
     };
