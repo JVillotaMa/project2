@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 
 
 export default function Resultados() {
-    const { isFormValid } = useTransportesForm();
+    const { isFormValid,formData } = useTransportesForm();
     const [optionSelected, setOptionSelected] = useState("option-one");
     const [servicioData, setServicioData] = useState({
         kilometrosTrayecto: undefined,
@@ -102,6 +102,7 @@ export default function Resultados() {
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevenir el comportamiento predeterminado
                                             setModalOpen(true);
+                                            console.log(formData)
                                         }}
                                         disabled={optionSelected === "option-two" && (!servicioData.kilometrosTrayecto || !servicioData.horasServicio)}
                                         type="button" // Especificar tipo button para evitar submit

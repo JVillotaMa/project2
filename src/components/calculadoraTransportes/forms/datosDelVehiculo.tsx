@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesFormContext";
+import { useTransportDataContext } from "@/lib/calculadoraTransportes/TransportDataContext";
 import React, { useEffect } from "react";
 
 export default function DatosDelVehiculo() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useTransportesForm();
+    const { currentBusData } = useTransportDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -53,7 +55,9 @@ export default function DatosDelVehiculo() {
                             value={formData.costeDeAdquisicion}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeDeAdquisicion')}
-                            defaultValue={150000}
+                            defaultValue={currentBusData && typeof currentBusData['Coste adquisicion vehiculo'] === 'number' 
+                                ? currentBusData['Coste adquisicion vehiculo'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Vida útil del vehículo (Años):" 
@@ -61,7 +65,9 @@ export default function DatosDelVehiculo() {
                             value={formData.vidaUtil}
                             onChange={handleInputChange}
                             error={getErrorMessage('vidaUtil')}
-                            defaultValue={10}
+                            defaultValue={currentBusData && typeof currentBusData['Vida util del vehiculo'] === 'number' 
+                                ? currentBusData['Vida util del vehiculo'] 
+                                : 0}
                         />
                     </form>
                 </div>
@@ -76,7 +82,9 @@ export default function DatosDelVehiculo() {
                             value={formData.costeFinanciacionTAE}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeFinanciacionTAE')}
-                            defaultValue={5}
+                            defaultValue={currentBusData && typeof currentBusData['Coste de la financiacion del vehiculo (TAE %)'] === 'number' 
+                                ? currentBusData['Coste de la financiacion del vehiculo (TAE %)'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Plazo de financiación (Años):" 
@@ -84,7 +92,9 @@ export default function DatosDelVehiculo() {
                             value={formData.plazoFinanciacion}
                             onChange={handleInputChange}
                             error={getErrorMessage('plazoFinanciacion')}
-                            defaultValue={5}
+                            defaultValue={currentBusData && typeof currentBusData['Plazo financiacion'] === 'number' 
+                                ? currentBusData['Plazo financiacion'] 
+                                : 0}
                         />
                     </form>
                 </div>
@@ -99,7 +109,9 @@ export default function DatosDelVehiculo() {
                             value={formData.mantenimientoAnual}
                             onChange={handleInputChange}
                             error={getErrorMessage('mantenimientoAnual')}
-                            defaultValue={3000}
+                            defaultValue={currentBusData && typeof currentBusData['Coste anual mantenimiento'] === 'number' 
+                                ? currentBusData['Coste anual mantenimiento'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Coste anual del seguro del vehículo  (€):" 
@@ -107,7 +119,9 @@ export default function DatosDelVehiculo() {
                             value={formData.seguroAnual}
                             onChange={handleInputChange}
                             error={getErrorMessage('seguroAnual')}
-                            defaultValue={2500}
+                            defaultValue={currentBusData && typeof currentBusData['Coste anual seguro'] === 'number' 
+                                ? currentBusData['Coste anual seguro'] 
+                                : 0}
                         />
                     </form>
                 </div>

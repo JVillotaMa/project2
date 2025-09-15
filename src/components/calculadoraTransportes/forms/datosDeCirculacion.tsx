@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesFormContext";
+import { useTransportDataContext } from "@/lib/calculadoraTransportes/TransportDataContext";
 import React, { useEffect } from "react";
 
 export default function DatosDeCirculación() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useTransportesForm();
+    const { currentBusData } = useTransportDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -53,7 +55,9 @@ export default function DatosDeCirculación() {
                             value={formData.kilometrosAnuales}
                             onChange={handleInputChange}
                             error={getErrorMessage('kilometrosAnuales')}
-                            defaultValue={60000}
+                            defaultValue={currentBusData && typeof currentBusData['Kilometros recorridos por vehiculo'] === 'number' 
+                                ? currentBusData['Kilometros recorridos por vehiculo'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Coste del combustible (€/litro):" 
@@ -61,7 +65,9 @@ export default function DatosDeCirculación() {
                             value={formData.costeDelCombustible}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeDelCombustible')}
-                            defaultValue={1.4}
+                            defaultValue={currentBusData && typeof currentBusData['Coste combustible (€/L)'] === 'number' 
+                                ? currentBusData['Coste combustible (€/L)'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Coste de cada neumático del vehículo (€):" 
@@ -69,7 +75,9 @@ export default function DatosDeCirculación() {
                             value={formData.costeNeumatico}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeNeumatico')}
-                            defaultValue={300}
+                            defaultValue={currentBusData && typeof currentBusData['Coste cada neumatico'] === 'number' 
+                                ? currentBusData['Coste cada neumatico'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Vida útil de cada neumático (Km):" 
@@ -77,7 +85,9 @@ export default function DatosDeCirculación() {
                             value={formData.vidaUtilNeumatico}
                             onChange={handleInputChange}
                             error={getErrorMessage('vidaUtilNeumatico')}
-                            defaultValue={50000}
+                            defaultValue={currentBusData && typeof currentBusData['Vida util de cada neumatico (Km)'] === 'number' 
+                                ? currentBusData['Vida util de cada neumatico (Km)'] 
+                                : 0}
                         />
                     </form>
                 </div>

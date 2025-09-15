@@ -4,10 +4,12 @@ import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesFormContext";
+import { useTransportDataContext } from "@/lib/calculadoraTransportes/TransportDataContext";
 import React, { useEffect } from "react";
 
 export default function DatosGenerales() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useTransportesForm();
+    const { isLoading, error, selectedBusType, setSelectedBusType, currentBusData } = useTransportDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -22,6 +24,28 @@ export default function DatosGenerales() {
         updateFormData({ 
             tipoDeAutobus: value as "Menos de 22 plazas" | "De 22 a 35 plazas" | "De 36 a 55 plazas" | "Mas de 55 plazas" 
         });
+        
+        // Map the form value to the CSV column header
+        let busType = "";
+        switch(value) {
+            case "Menos de 22 plazas":
+                busType = "Menos de 22";
+                break;
+            case "De 22 a 35 plazas":
+                busType = "De 22 a 35";
+                break;
+            case "De 36 a 55 plazas":
+                busType = "De 36 a 55";
+                break;
+            case "Mas de 55 plazas":
+                busType = "Mas de 55";
+                break;
+            default:
+                busType = "Menos de 22";
+        }
+        
+        // Update the selected bus type in the context
+        setSelectedBusType(busType);
     };
     
     // Handle number input changes
@@ -52,6 +76,20 @@ export default function DatosGenerales() {
     return (
         <div className="flex flex-col gap-5">
             <SectionTitle title="Datos generales" />
+            
+            {isLoading && (
+                <div className="flex justify-center items-center p-4 bg-gray-100 rounded-md">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mr-2"></div>
+                    <p>Cargando datos del autobus...</p>
+                </div>
+            )}
+            
+            {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong className="font-bold">Error: </strong>
+                    <span className="block sm:inline">{error}</span>
+                </div>
+            )}
             
             <SectionContainer subSectionTitle="Seleccione el tipo de autobús">
                 <div className="flex justify-center">
@@ -98,7 +136,9 @@ export default function DatosGenerales() {
                             value={formData.salarioAnualConductor}
                             onChange={handleInputChange}
                             error={getErrorMessage('salarioAnualConductor')}
-                            defaultValue={25000}
+                            defaultValue={currentBusData && typeof currentBusData['Salario anual conductor'] === 'number' 
+                                ? currentBusData['Salario anual conductor'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Horas anuales trabajadas:" 
@@ -106,7 +146,9 @@ export default function DatosGenerales() {
                             value={formData.horasAnualesTrabajadas}
                             onChange={handleInputChange}
                             error={getErrorMessage('horasAnualesTrabajadas')}
-                            defaultValue={1800}
+                            defaultValue={currentBusData && typeof currentBusData['Hora trabajo anuales'] === 'number' 
+                                ? currentBusData['Hora trabajo anuales'] 
+                                : 0}
                         />
                     </div>
                 </div>
@@ -120,7 +162,9 @@ export default function DatosGenerales() {
                         value={formData.costesGenerales}
                         onChange={handleInputChange}
                         error={getErrorMessage('costesGenerales')}
-                        defaultValue={15}
+                        defaultValue={currentBusData && typeof currentBusData['Costes generales'] === 'number' 
+                            ? currentBusData['Costes generales'] 
+                            : 0}
                     />
                 </div>
             </SectionContainer>
