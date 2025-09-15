@@ -4,10 +4,12 @@ import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function Seguros() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Inicializar optionSelected con el valor de formData.tipoSeguro o "TodoRiesgo" (todo riesgo) por defecto
     const [optionSelected, setOptionSelected] = React.useState(formData.tipoSeguro || "Obligatorios");
@@ -85,7 +87,9 @@ export default function Seguros() {
                                             value={formData.costeSeguroAnual}
                                             onChange={handleInputChange}
                                             error={getErrorMessage('costeSeguroAnual')}
-                                            defaultValue={7000}
+                                            defaultValue={currentVehicleData && typeof currentVehicleData['Seguro solo obligatorio'] === 'number' 
+                                                ? currentVehicleData['Seguro solo obligatorio'] 
+                                                : 0}
                                         />
                                     }
                                     
@@ -106,7 +110,9 @@ export default function Seguros() {
                                             value={formData.costeSeguroAnual}
                                             onChange={handleInputChange}
                                             error={getErrorMessage('costeSeguroAnual')}
-                                            defaultValue={9000}
+                                            defaultValue={currentVehicleData && typeof currentVehicleData['Seguro obligatorio + terceros'] === 'number' 
+                                                ? currentVehicleData['Seguro obligatorio + terceros'] 
+                                                : 0}
                                         />
                                     }
                                 </div>
@@ -126,7 +132,9 @@ export default function Seguros() {
                                             value={formData.costeSeguroAnual}
                                             onChange={handleInputChange}
                                             error={getErrorMessage('costeSeguroAnual')}
-                                            defaultValue={12000}
+                                            defaultValue={currentVehicleData && typeof currentVehicleData['Seguro todo riesgo'] === 'number' 
+                                                ? currentVehicleData['Seguro todo riesgo'] 
+                                                : 0}
                                         />
                                     }
                                 </div>
@@ -138,7 +146,9 @@ export default function Seguros() {
                             value={formData.seguroMercancia}
                             onChange={handleInputChange}
                             error={getErrorMessage('seguroMercancia')}
-                            defaultValue={1000}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Seguro mercancia'] === 'number' 
+                                ? currentVehicleData['Seguro mercancia'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Responsabilidad Civil (€/año):" 
@@ -146,7 +156,9 @@ export default function Seguros() {
                             value={formData.responsabilidadCivil}
                             onChange={handleInputChange}
                             error={getErrorMessage('responsabilidadCivil')}
-                            defaultValue={2000}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Responsabilidad civil'] === 'number' 
+                                ? currentVehicleData['Responsabilidad civil'] 
+                                : 0}
                         />
                     </form>
                 </div>

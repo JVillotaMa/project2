@@ -186,6 +186,8 @@ export function MercanciasFormProvider({ children }: { children: React.ReactNode
           ejes: formData.ejes,
         };
         
+        console.log('Validating vehicle data:', vehiculoData);
+        
         // Check if all fields have been filled by the user
         const hasAllFields = 
           vehiculoData.cv !== undefined && 
@@ -201,6 +203,7 @@ export function MercanciasFormProvider({ children }: { children: React.ReactNode
         }
         
         // If all fields have values, validate them
+        console.log('Validating vehicle data against schema');
         vehiculoSchema.parse(vehiculoData);
         
         // If validation passes, mark as valid

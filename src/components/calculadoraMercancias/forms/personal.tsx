@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function Personal() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -51,7 +53,9 @@ export default function Personal() {
                             value={formData.seguridadSocialPorcentaje}
                             onChange={handleInputChange}
                             error={getErrorMessage('seguridadSocialPorcentaje')}
-                            defaultValue={36}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Seguridad social empresa %'] === 'number' 
+                                ? currentVehicleData['Seguridad social empresa %'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Retribución ordinaria 1 conductor mecánico (€/año):" 
@@ -59,7 +63,9 @@ export default function Personal() {
                             value={formData.salarioBrutoAnual}
                             onChange={handleInputChange}
                             error={getErrorMessage('salarioBrutoAnual')}
-                            defaultValue={28000}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Retribucion 1 conductor mecanico'] === 'number' 
+                                ? currentVehicleData['Retribucion 1 conductor mecanico'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Plus de asistencia (€/año):" 
@@ -67,7 +73,9 @@ export default function Personal() {
                             value={formData.plusDeAsistencia}
                             onChange={handleInputChange}
                             error={getErrorMessage('plusDeAsistencia')}
-                            defaultValue={1000}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Plus de asistencia'] === 'number' 
+                                ? currentVehicleData['Plus de asistencia'] 
+                                : 0}
                         />
                     </form>
                 </div>

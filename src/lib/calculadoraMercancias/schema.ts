@@ -2,10 +2,10 @@ import { z } from "zod";
 
 // -------------------- Vehículo --------------------
 export const vehiculoSchema = z.object({
-  cv: z.number().min(1, "El campo CV debe estar relleno").nullable(),
-  mma: z.number().min(1, "El campo MMA debe estar relleno").nullable(),
-  cargaUtil: z.number().min(1, "El campo Carga útil debe estar relleno").nullable(),
-  ejes: z.number().min(1, "El campo Ejes debe estar relleno"),
+  cv: z.number().min(0, "El campo CV debe estar relleno").nullable(),
+  mma: z.number().min(0, "El campo MMA debe estar relleno").nullable(),
+  cargaUtil: z.number().min(0, "El campo Carga útil debe estar relleno").nullable(),
+  ejes: z.number().min(0, "El campo Ejes debe estar relleno").nullable(),
 });
 
 // -------------------- Datos generales --------------------
@@ -32,7 +32,7 @@ export const amortizacionYFinanciacionSchema = z.object({
   periodoAmortizacionRemolque: z.number().min(1, "El campo Periodo de amortización del remolque (años) debe estar relleno"),
   
   // Financiación
-  cuantiaAFinanciar: z.number().min(0, "El campo Cuantía a financiar debe estar relleno"),
+  cuantiaAFinanciar: z.number().min(0, "El campo Cuantía a financiar (%) debe estar relleno").max(100, "El campo Cuantía a financiar (%) no puede ser mayor de 100"),
   periodoAFinanciar: z.number().min(1, "El campo Periodo a financiar (años) debe estar relleno"),
   tipoInteresAnual: z.number().min(0, "El campo Tipo de interés anual (%) debe estar relleno").max(100, "El campo Tipo de interés anual (%) no puede ser mayor de 100"),
 });

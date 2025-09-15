@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function CostesIndirectos() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -51,7 +53,9 @@ export default function CostesIndirectos() {
                             value={formData.costesIndirectos}
                             onChange={handleInputChange}
                             error={getErrorMessage('costesIndirectos')}
-                            defaultValue={5000}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Costes indirectos'] === 'number' 
+                                ? currentVehicleData['Costes indirectos'] 
+                                : 0}
                         />
                     </form>
                 </div>

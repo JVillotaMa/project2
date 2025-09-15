@@ -2,10 +2,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function AmortizacionFinanciacion() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -63,7 +65,9 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.precioVentaSinIvaCabezaTractora}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('precioVentaSinIvaCabezaTractora')}
-                                        defaultValue={120000}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Precio venta sin IVA (Cabeza tractora)'] === 'number' 
+                                            ? currentVehicleData['Precio venta sin IVA (Cabeza tractora)'] 
+                                            : 0}
                                     />
                                 </div>
                                 <div className="w-1/3 p-2">
@@ -73,7 +77,9 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.precioVentaSinIvaRemolque}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('precioVentaSinIvaRemolque')}
-                                        defaultValue={30000}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Precio venta sin IVA (Semirremolque)'] === 'number' 
+                                            ? currentVehicleData['Precio venta sin IVA (Semirremolque)'] 
+                                            : 0}
                                     />
                                 </div>
                             </div>
@@ -88,7 +94,9 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.descuentoMedioSobreTarifaCabezaTractora}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('descuentoMedioSobreTarifaCabezaTractora')}
-                                        defaultValue={10}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Dto. Medio sobre tarifa (Cabeza tractora)'] === 'number' 
+                                            ? currentVehicleData['Dto. Medio sobre tarifa (Cabeza tractora)'] 
+                                            : 0}
                                     />
                                 </div>
                                 <div className="w-1/3 p-2">
@@ -98,7 +106,9 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.descuentoMedioSobreTarifaRemolque}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('descuentoMedioSobreTarifaRemolque')}
-                                        defaultValue={10}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Dto. Medio sobre tarifa (Semirremolque)'] === 'number' 
+                                            ? currentVehicleData['Dto. Medio sobre tarifa (Semirremolque)'] 
+                                            : 0}
                                     />
                                 </div>
                             </div>
@@ -113,7 +123,9 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.valorResidualPorcentajeCabezaTractora}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('valorResidualPorcentajeCabezaTractora')}
-                                        defaultValue={20}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Valor residual % (Cabeza tractora)'] === 'number' 
+                                            ? currentVehicleData['Valor residual % (Cabeza tractora)'] 
+                                            : 0}
                                     />
                                 </div>
                                 <div className="w-1/3 p-2">
@@ -123,14 +135,16 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.valorResidualPorcentajeRemolque}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('valorResidualPorcentajeRemolque')}
-                                        defaultValue={20}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Valor residual % (Semirremolque)'] === 'number' 
+                                            ? currentVehicleData['Valor residual % (Semirremolque)'] 
+                                            : 0}
                                     />
                                 </div>
                             </div>
                             
                             {/* Fila 4: Periodo amortización */}
                             <div className="flex">
-                                <div className="w-1/3 p-3 font-medium">Periodo amortización (años)</div>
+                                <div className="w-1/3 p-3 font-medium">Periodo amortizacion (años)</div>
                                 <div className="w-1/3 p-2">
                                     <FormInput 
                                         label=""
@@ -138,7 +152,11 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.periodoAmortizacionCabezaTractora}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('periodoAmortizacionCabezaTractora')}
-                                        defaultValue={6}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Periodo amortizacion (Cabeza tractora)'] === 'number' 
+                                            ? currentVehicleData['Periodo amortizacion (Cabeza tractora)'] 
+                                            : (currentVehicleData && typeof currentVehicleData['Periodo amortizacion'] === 'number'
+                                                ? currentVehicleData['Periodo amortizacion']
+                                                : 0)}
                                     />
                                 </div>
                                 <div className="w-1/3 p-2">
@@ -148,7 +166,11 @@ export default function AmortizacionFinanciacion() {
                                         value={formData.periodoAmortizacionRemolque}
                                         onChange={handleInputChange}
                                         error={getErrorMessage('periodoAmortizacionRemolque')}
-                                        defaultValue={6}
+                                        defaultValue={currentVehicleData && typeof currentVehicleData['Periodo amortizacion (Semirremolque)'] === 'number' 
+                                            ? currentVehicleData['Periodo amortizacion (Semirremolque)'] 
+                                            : (currentVehicleData && typeof currentVehicleData['Periodo amortizacion'] === 'number'
+                                                ? currentVehicleData['Periodo amortizacion']
+                                                : 0)}
                                     />
                                 </div>
                             </div>
@@ -161,12 +183,14 @@ export default function AmortizacionFinanciacion() {
                     <div className="w-full p-6">
                         <form className="flex flex-col gap-4 w-full">
                             <FormInput 
-                                label="Cuantía a financiar (€):" 
+                                label="Vehículo: Cuantia a financiar (%):" 
                                 name="cuantiaAFinanciar"
                                 value={formData.cuantiaAFinanciar}
                                 onChange={handleInputChange}
                                 error={getErrorMessage('cuantiaAFinanciar')}
-                                defaultValue={100000}
+                                defaultValue={currentVehicleData && typeof currentVehicleData['Veh. Cuantia a financiar'] === 'number' 
+                                    ? currentVehicleData['Veh. Cuantia a financiar'] 
+                                    : 0}
                             />
                             <FormInput 
                                 label="Periodo a financiar (años):" 
@@ -174,15 +198,19 @@ export default function AmortizacionFinanciacion() {
                                 value={formData.periodoAFinanciar}
                                 onChange={handleInputChange}
                                 error={getErrorMessage('periodoAFinanciar')}
-                                defaultValue={5}
+                                defaultValue={currentVehicleData && typeof currentVehicleData['Periodo a financiar'] === 'number' 
+                                    ? currentVehicleData['Periodo a financiar'] 
+                                    : 0}
                             />
                             <FormInput 
-                                label="Tipo interés anual (TAE %):" 
+                                label="Tipo interes anual (TAE %):" 
                                 name="tipoInteresAnual"
                                 value={formData.tipoInteresAnual}
                                 onChange={handleInputChange}
                                 error={getErrorMessage('tipoInteresAnual')}
-                                defaultValue={4.5}
+                                defaultValue={currentVehicleData && typeof currentVehicleData['Tipo interes anual'] === 'number' 
+                                    ? currentVehicleData['Tipo interes anual'] 
+                                    : 0}
                             />
                         </form>
                     </div>

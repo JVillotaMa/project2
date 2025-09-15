@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function DietasPeajes() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -51,7 +53,9 @@ export default function DietasPeajes() {
                             value={formData.dietaMedia}
                             onChange={handleInputChange}
                             error={getErrorMessage('dietaMedia')}
-                            defaultValue={45}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Dieta media'] === 'number' 
+                                ? currentVehicleData['Dieta media'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Nº días" 
@@ -59,7 +63,9 @@ export default function DietasPeajes() {
                             value={formData.numeroDias}
                             onChange={handleInputChange}
                             error={getErrorMessage('numeroDias')}
-                            defaultValue={225}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Num de dias'] === 'number' 
+                                ? currentVehicleData['Num de dias'] 
+                                : 0}
                         />
                     </form>
                 </div>
@@ -73,7 +79,9 @@ export default function DietasPeajes() {
                             value={formData.costeMedioPeajesPorServicio}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeMedioPeajesPorServicio')}
-                            defaultValue={25}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Coste medio Km de autopista'] === 'number' 
+                                ? currentVehicleData['Coste medio Km de autopista'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Porcentaje de servicios que pagan peaje (%):" 
@@ -81,7 +89,9 @@ export default function DietasPeajes() {
                             value={formData.porcentajeServiciosConPeaje}
                             onChange={handleInputChange}
                             error={getErrorMessage('porcentajeServiciosConPeaje')}
-                            defaultValue={30}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['% servicios que pagan peajes'] === 'number' 
+                                ? currentVehicleData['% servicios que pagan peajes'] 
+                                : 0}
                         />
                     </form>
                 </div>

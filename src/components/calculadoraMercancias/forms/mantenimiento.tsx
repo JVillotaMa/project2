@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function Mantenimiento() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -46,12 +48,14 @@ export default function Mantenimiento() {
                 <div className="flex justify-center">
                     <form className="flex flex-col gap-3 p-10 w-full">
                         <FormInput 
-                            label="Coste anual de mantenimiento del vehículo (€):" 
+                            label="Coste anual de mantenimiento del vehículo (€/Km):" 
                             name="costeAnualMantenimiento"
                             value={formData.costeAnualMantenimiento}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeAnualMantenimiento')}
-                            defaultValue={8500}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Mantenimiento y reparacion'] === 'number' 
+                                ? currentVehicleData['Mantenimiento y reparacion'] 
+                                : 0}
                         />
                     </form>
                 </div>

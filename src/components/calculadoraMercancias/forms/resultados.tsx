@@ -8,8 +8,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function Resultados() {
-    const {  isFormValid } = useMercanciasForm();
-    
+    const {  formData,isFormValid } = useMercanciasForm();
     const [optionSelected, setOptionSelected] = React.useState("option-one");
     const [kilometrosServicio, setKilometrosServicio] = React.useState<number | undefined>(undefined);
     const [horasServicio, setHorasServicio] = React.useState<number | undefined>(undefined);
@@ -91,7 +90,7 @@ export default function Resultados() {
                             <button
                                 type="button"
                                 className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition"
-                                onClick={() => setModalOpen(true)}
+                                onClick={() => {setModalOpen(true);console.log(formData)}}
                                 disabled={optionSelected === "option-two" && (!kilometrosServicio || !horasServicio) }
                             >
                                 Calcular

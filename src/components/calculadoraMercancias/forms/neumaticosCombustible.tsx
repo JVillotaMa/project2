@@ -4,10 +4,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function NeumaticosCombustible() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -52,7 +54,9 @@ export default function NeumaticosCombustible() {
                             value={formData.precioBrutoNeumaticos}
                             onChange={handleInputChange}
                             error={getErrorMessage('precioBrutoNeumaticos')}
-                            defaultValue={700}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Precio bruto neumaticos'] === 'number' 
+                                ? currentVehicleData['Precio bruto neumaticos'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Dto. medio sobre neumáticos (%)" 
@@ -60,19 +64,23 @@ export default function NeumaticosCombustible() {
                             value={formData.descuentoMedioNeumaticos}
                             onChange={handleInputChange}
                             error={getErrorMessage('descuentoMedioNeumaticos')}
-                            defaultValue={10}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Descuento medio neumaticos (%)'] === 'number' 
+                                ? currentVehicleData['Descuento medio neumaticos (%)'] 
+                                : 0}
                         />
                         <CalculationField 
                             label="Precio medio neumático (€/unidad)" 
-                            value={(formData.precioBrutoNeumaticos ? formData.precioBrutoNeumaticos : 0) * 
-                                    ((formData.descuentoMedioNeumaticos ? formData.descuentoMedioNeumaticos : 0) / 100)}/>
+                            value={(formData.precioBrutoNeumaticos ? formData.precioBrutoNeumaticos : 0) * ( 1 -
+                                    (formData.descuentoMedioNeumaticos ? formData.descuentoMedioNeumaticos : 0) /100 )}/>
                         <FormInput 
                             label="Duración media neumáticos (km)" 
                             name="duracionMediaNeumaticosKm"
                             value={formData.duracionMediaNeumaticosKm}
                             onChange={handleInputChange}
                             error={getErrorMessage('duracionMediaNeumaticosKm')}
-                            defaultValue={120000}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Duracion media neumaticos'] === 'number' 
+                                ? currentVehicleData['Duracion media neumaticos'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Número total de neumáticos" 
@@ -80,7 +88,9 @@ export default function NeumaticosCombustible() {
                             value={formData.numeroTotalNeumaticos}
                             onChange={handleInputChange}
                             error={getErrorMessage('numeroTotalNeumaticos')}
-                            defaultValue={12}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Num total de neumaticos'] === 'number' 
+                                ? currentVehicleData['Num total de neumaticos'] 
+                                : 0}
                         />
                     </form>
                 </div>
@@ -94,7 +104,9 @@ export default function NeumaticosCombustible() {
                             value={formData.precioBrutoGasoleoSinIva}
                             onChange={handleInputChange}
                             error={getErrorMessage('precioBrutoGasoleoSinIva')}
-                            defaultValue={1.15}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Precio bruto gasoleo'] === 'number' 
+                                ? currentVehicleData['Precio bruto gasoleo'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Descuento medio sobre combustible (%):" 
@@ -102,19 +114,23 @@ export default function NeumaticosCombustible() {
                             value={formData.descuentoMedioConbustible}
                             onChange={handleInputChange}
                             error={getErrorMessage('descuentoMedioConbustible')}
-                            defaultValue={5}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Descuento medio sobre combustible'] === 'number' 
+                                ? currentVehicleData['Descuento medio sobre combustible'] 
+                                : 0}
                         />
                         <CalculationField 
                             label="Precio del gasóleo (€/litro)" 
-                            value={(formData.precioBrutoGasoleoSinIva ? formData.precioBrutoGasoleoSinIva : 0) * 
-                                    ((formData.descuentoMedioConbustible ? formData.descuentoMedioConbustible : 0) / 100)}/>
+                            value={(formData.precioBrutoGasoleoSinIva ? formData.precioBrutoGasoleoSinIva : 0) * (1-
+                                    (formData.descuentoMedioConbustible ? formData.descuentoMedioConbustible : 0) / 100 )}/>
                         <FormInput 
                             label="Consumo medio (lit/100km):" 
                             name="consumoMedioVehiculo100km"
                             value={formData.consumoMedioVehiculo100km}
                             onChange={handleInputChange}
                             error={getErrorMessage('consumoMedioVehiculo100km')}
-                            defaultValue={35}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Consumo medio'] === 'number' 
+                                ? currentVehicleData['Consumo medio'] 
+                                : 0}
                         />
                     </form>
                 </div>

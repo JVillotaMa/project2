@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function DatosGenerales() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -51,7 +53,9 @@ export default function DatosGenerales() {
                             value={formData.serviciosDiariosPorVehiculo}
                             onChange={handleInputChange}
                             error={getErrorMessage('serviciosDiariosPorVehiculo')}
-                            defaultValue={5}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Num servicios por veh'] === 'number' 
+                                ? currentVehicleData['Num servicios por veh'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Kilometraje anual (Km/año):" 
@@ -59,7 +63,9 @@ export default function DatosGenerales() {
                             value={formData.kilometrajeAnual}
                             onChange={handleInputChange}
                             error={getErrorMessage('kilometrajeAnual')}
-                            defaultValue={100000}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Kilometraje anual'] === 'number' 
+                                ? currentVehicleData['Kilometraje anual'] 
+                                : 0}
                         />
                         <FormInput 
                             label="% Kilometraje anual en vacío:" 
@@ -67,7 +73,9 @@ export default function DatosGenerales() {
                             value={formData.porcentajeKilometrajeVacio}
                             onChange={handleInputChange}
                             error={getErrorMessage('porcentajeKilometrajeVacio')}
-                            defaultValue={15}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['% Kilometraje anual vacio'] === 'number' 
+                                ? currentVehicleData['% Kilometraje anual vacio'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Horas anuales trabajadas:" 
@@ -75,7 +83,9 @@ export default function DatosGenerales() {
                             value={formData.horasAnualesTrabajadas}
                             onChange={handleInputChange}
                             error={getErrorMessage('horasAnualesTrabajadas')}
-                            defaultValue={1800}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Horas anuales trabajadas'] === 'number' 
+                                ? currentVehicleData['Horas anuales trabajadas'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Días de actividad:" 
@@ -83,7 +93,9 @@ export default function DatosGenerales() {
                             value={formData.diasDeActividad}
                             onChange={handleInputChange}
                             error={getErrorMessage('diasDeActividad')}
-                            defaultValue={225}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Dias de actividad'] === 'number' 
+                                ? currentVehicleData['Dias de actividad'] 
+                                : 0}
                         />
                     </form>
                 </div>

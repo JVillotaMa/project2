@@ -3,10 +3,12 @@ import SectionContainer from "@/components/shared/form/sectionContainer";
 import SectionTitle from "@/components/shared/form/sectionTitle";
 import FormInput from "@/components/shared/formInput";
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import React, { useEffect } from "react";
 
 export default function Impuestos() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useMercanciasForm();
+    const { currentVehicleData } = useVehicleDataContext();
     
     // Mark this section as visited when the component mounts
     useEffect(() => {
@@ -51,7 +53,9 @@ export default function Impuestos() {
                             value={formData.visadoAutorizacion}
                             onChange={handleInputChange}
                             error={getErrorMessage('visadoAutorizacion')}
-                            defaultValue={35}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Visado autorizacion de Tte'] === 'number' 
+                                ? currentVehicleData['Visado autorizacion de Tte'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Impuesto veh. Tracción Mec. (€/año):" 
@@ -59,7 +63,9 @@ export default function Impuestos() {
                             value={formData.impuestoVehiculoTraccion}
                             onChange={handleInputChange}
                             error={getErrorMessage('impuestoVehiculoTraccion')}
-                            defaultValue={430}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Impuesto Veh. Traccion Mec'] === 'number' 
+                                ? currentVehicleData['Impuesto Veh. Traccion Mec'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Coste ITV (€/año):" 
@@ -67,7 +73,9 @@ export default function Impuestos() {
                             value={formData.costeItv}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeItv')}
-                            defaultValue={90}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Coste ITV'] === 'number' 
+                                ? currentVehicleData['Coste ITV'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Coste IAE (€/año):" 
@@ -75,15 +83,19 @@ export default function Impuestos() {
                             value={formData.costeIAE}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeIAE')}
-                            defaultValue={400}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Coste IAE'] === 'number' 
+                                ? currentVehicleData['Coste IAE'] 
+                                : 0}
                         />
                         <FormInput 
-                            label="Coste revisión Tacógrafo (€/año):" 
+                            label="Coste revisión tacógrafo (€/año):" 
                             name="costeTacografo"
                             value={formData.costeTacografo}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeTacografo')}
-                            defaultValue={50}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Coste revision tacografo'] === 'number' 
+                                ? currentVehicleData['Coste revision tacografo'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Coste ATP (€/año):" 
@@ -91,7 +103,9 @@ export default function Impuestos() {
                             value={formData.costeAtp}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeAtp')}
-                            defaultValue={150}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Coste ATP'] === 'number' 
+                                ? currentVehicleData['Coste ATP'] 
+                                : 0}
                         />
                         <FormInput 
                             label="Coste ADR (€/año):" 
@@ -99,7 +113,9 @@ export default function Impuestos() {
                             value={formData.costeAdr}
                             onChange={handleInputChange}
                             error={getErrorMessage('costeAdr')}
-                            defaultValue={100}
+                            defaultValue={currentVehicleData && typeof currentVehicleData['Coste ADR'] === 'number' 
+                                ? currentVehicleData['Coste ADR'] 
+                                : 0}
                         />
                     </form>
                 </div>
