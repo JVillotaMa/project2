@@ -93,7 +93,7 @@ export function parseVehicleCsvFile(fileName: string): CsvVehicleData {
           }
           
           // Store the original value (from cabeza tractora) for backward compatibility
-          result[normalizedKey] = cabezaValue;
+          //result[normalizedKey] = cabezaValue;
           
           // Also store specific keys for cabeza and semirremolque
           result[`${normalizedKey} (Cabeza tractora)`] = cabezaValue;

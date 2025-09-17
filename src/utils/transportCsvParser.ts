@@ -19,7 +19,7 @@ export function parseTransportCsvFile(): TransportData {
     
     // Parse the CSV data (using semicolon as delimiter)
     const records = parse(fileContent, {
-      delimiter: ',',
+      delimiter: ',',  // Using comma as delimiter
       skip_empty_lines: true,
       trim: true
     });
