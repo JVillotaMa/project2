@@ -4,51 +4,114 @@ import { SelectView } from "@/lib/types";
 import React from "react";
 import ButtonsNavigation from "../shared/ButtonNavigation";
 import TituloSeccion from "../shared/leftbar/TituloSeccion";
-
-import SubtituloSeccion from "../shared/leftbar/subtituloSeccion";
 import DatosGenerales from "./forms/datosGenerales";
 import DatosDelVehiculo from "./forms/datosDelVehiculo";
 import DatosDeCirculación from "./forms/datosDeCirculacion";
 import Resultados from "./forms/resultados";
+import ResultsButton from "../shared/resultsButton";
+import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesFormContext";
+import FormStepNavigation from "../shared/FormStepNavigation";
 
 export default function CalculoCosteTransportes() {
     const [viewIndex, setViewIndex] = React.useState(0);
+    const { validationStatus, markAsVisited, isFormValid } = useTransportesForm();
 
     const selectView: SelectView[] = [
         { name: "Datos generales", component: <DatosGenerales /> },
         { name: "Datos del vehículo", component: <DatosDelVehiculo /> },
         { name: "Datos de circulación", component: <DatosDeCirculación /> },
         { name: "Resultados", component: <Resultados /> },
-    ]
+    ];
 
     function RenderForm({ index }: { index: number }) {
-        return (
-            selectView[index].component
-
-        )
+        return selectView[index].component;
     }
 
     function handleClick(index: number) {
         setViewIndex(index);
+        
+        // Mark the section as visited when clicked - using setTimeout to avoid render loops
+        setTimeout(() => {
+            if (index === 0) markAsVisited('datosGenerales');
+            else if (index === 1) markAsVisited('datosVehiculo');
+            else if (index === 2) markAsVisited('datosCirculacion');
+        }, 0);
     }
 
+    function handlePrevious() {
+        if (viewIndex > 0) {
+            handleClick(viewIndex - 1);
+        }
+    }
+    
+    function handleNext() {
+        if (viewIndex < selectView.length - 1) {
+            handleClick(viewIndex + 1);
+        }
+    }
+    
+    function isNextDisabled() {
+        // Disable next button if current section is invalid or incomplete
+        if (viewIndex === 0) return validationStatus.datosGenerales !== 'valid';
+        if (viewIndex === 1) return validationStatus.datosVehiculo !== 'valid';
+        if (viewIndex === 2) return validationStatus.datosCirculacion !== 'valid';
+        return false;
+    }
+
+    // Determine if the results button should be disabled
+    const isResultsDisabled = !isFormValid;
+
     return (
-        <div className="flex flex-row ">
-            <div id="left-bar">
+        <div className="flex flex-col md:flex-row">
+            <div id="left-bar" className="w-full md:w-auto">
                 <NavigationLeftBar>
                     <TituloSeccion titulo="Secciones" />
-                    <ButtonsNavigation onClick={() => handleClick(0)} text="Datos generales" index={0} isSelected={viewIndex == 0} />
-                    <ButtonsNavigation onClick={() => handleClick(1)} text="Datos del vehículo" index={1} isSelected={viewIndex == 1} />
-                    <ButtonsNavigation onClick={() => handleClick(2)} text="Datos de circulación" index={2} isSelected={viewIndex == 2} />
+                    <ButtonsNavigation 
+                        onClick={() => handleClick(0)} 
+                        text="Datos generales" 
+                        index={0} 
+                        isSelected={viewIndex === 0} 
+                        validationStatus={validationStatus.datosGenerales}
+                    />
+                    <ButtonsNavigation 
+                        onClick={() => handleClick(1)} 
+                        text="Datos del vehículo" 
+                        index={1} 
+                        isSelected={viewIndex === 1} 
+                        validationStatus={validationStatus.datosVehiculo}
+                    />
+                    <ButtonsNavigation 
+                        onClick={() => handleClick(2)} 
+                        text="Datos de circulación" 
+                        index={2} 
+                        isSelected={viewIndex === 2} 
+                        validationStatus={validationStatus.datosCirculacion}
+                    />
                     <br />
-                    <ButtonsNavigation onClick={() => handleClick(3)} text="Resultados" index={3} isSelected={viewIndex == 3} />
-
+                    <ResultsButton 
+                        disabled={isResultsDisabled} 
+                        onClick={() => handleClick(3)} 
+                        text="Resultados" 
+                        index={3} 
+                        isSelected={viewIndex === 3} 
+                        isFormValid={isFormValid}
+                    />
                 </NavigationLeftBar>
             </div>
-            <div id="form" className="block w-full">
+            <div id="form" className="w-full p-4">
                 <RenderForm index={viewIndex} />
-                {/*Render the form you want to display here+*/}
+                
+                {/* Form step navigation buttons */}
+                {viewIndex !== 3 && (
+                    <FormStepNavigation 
+                        onPrevious={handlePrevious}
+                        onNext={handleNext}
+                        isFirstStep={viewIndex === 0}
+                        isLastStep={viewIndex === selectView.length - 1}
+                        isNextDisabled={isNextDisabled()}
+                    />
+                )}
             </div>
         </div>
-    )
+    );
 }

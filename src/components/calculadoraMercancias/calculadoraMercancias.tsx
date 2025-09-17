@@ -2,6 +2,8 @@ import ImageTitle from "./ImageTitle";
 import Navbar from "../shared/Navbar";
 import ObservatorioAdvise from "../shared/ObservatorioAdvise";
 import CalculoCosteMercancias from "./calculoCosteMercancias";
+import { MercanciasFormProvider } from "@/lib/calculadoraMercancias/MercanciasFormContext";
+import { VehicleDataProvider } from "@/lib/calculadoraMercancias/VehicleDataContext";
 
 export default function CalculadoraMercancias() {
     return (
@@ -15,10 +17,13 @@ export default function CalculadoraMercancias() {
                     </div>
                 </div>
                 <div>
-                    <CalculoCosteMercancias/>
+                    <MercanciasFormProvider>
+                        <VehicleDataProvider>
+                            <CalculoCosteMercancias/>
+                        </VehicleDataProvider>
+                    </MercanciasFormProvider>
                 </div>
             </div>
         </>
-
     );
 }
