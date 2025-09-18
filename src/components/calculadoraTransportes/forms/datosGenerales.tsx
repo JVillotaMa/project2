@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 export default function DatosGenerales() {
     const { formData, updateFormData, validationErrors, markAsVisited } = useTransportesForm();
     const { isLoading, error, selectedBusType, setSelectedBusType, currentBusData } = useTransportDataContext();
-
+    
     // Mark this section as visited when the component mounts
     useEffect(() => {
         // Only mark if not already visited to avoid unnecessary re-renders
