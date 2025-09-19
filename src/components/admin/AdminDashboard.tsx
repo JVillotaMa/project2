@@ -36,6 +36,7 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       setError('Error al verificar el código. Inténtelo de nuevo.')
+      console.error('Error verifying access code:', err)
     } finally {
       setIsVerifying(false)
     }

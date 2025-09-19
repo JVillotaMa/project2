@@ -60,7 +60,7 @@ export default function ResultadosPorServicio({
             ? currentBusData['Numero Neumaticos']
             : 6;
         
-        let consumo = currentBusData["Consumo medio (L)"]
+        const consumo = currentBusData["Consumo medio (L)"]
         
         return {
             combustible: costeCombustibleKm(costeDelCombustible, consumo),

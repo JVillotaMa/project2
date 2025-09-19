@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import SectionContainer from '@/components/shared/form/sectionContainer'
 
 interface VehicleTypeSelectionProps {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Navbar from '@/components/shared/Navbar'
 import AccessForm from '../shared/AccessForm'
 import Loading from '../shared/Loading'
@@ -58,6 +58,7 @@ export default function MercanciasAdmin() {
       }
     } catch (err) {
       setError('Error al verificar el código. Inténtelo de nuevo.')
+      console.error('Error verifying access code:', err)
     } finally {
       setIsVerifying(false)
     }

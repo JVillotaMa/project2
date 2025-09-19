@@ -48,7 +48,7 @@ export default function ResultadosUnitarios() {
       : 6; // Valor por defecto si no está disponible
     
     // Estimación de consumo de combustible basado en tipo de autobús (l/100km)
-    let consumo = currentBusData["Consumo medio (L)"]
+    const consumo = currentBusData["Consumo medio (L)"]
     // Cálculos usando las funciones importadas
     const costeCombustible = costeCombustibleKm(costeDelCombustible, consumo);
     const costeNeumaticosPorKm = costeNeumaticosKm(costeNeumatico, numeroNeumaticos, vidaUtilNeumatico);
