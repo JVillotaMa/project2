@@ -7,6 +7,8 @@ import { useTransportesForm } from "@/lib/calculadoraTransportes/TransportesForm
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import ResultadosPorServicio from "./resultados/resultadosPorServicio/resultadosPorServicio";
+import ResultadosUnitarios from "./resultados/resultadosUnitarios/resultadosUnitarios";
 
 
 
@@ -34,7 +36,17 @@ export default function Resultados() {
         }));
     };
 
-
+    function RenderResultsView(){
+        if(optionSelected=="option-one"){
+            return <ResultadosUnitarios/>
+        } else {
+            return <ResultadosPorServicio 
+                kilometrosTrayecto={servicioData.kilometrosTrayecto} 
+                kilometrosPosicionamiento={servicioData.kilometrosPosicionamiento} 
+                horasServicio={servicioData.horasServicio}
+            />
+        }
+    }
 
     return (
         <div className="flex flex-col gap-5">
@@ -76,21 +88,21 @@ export default function Resultados() {
                                             name="kilometrosTrayecto"
                                             value={servicioData.kilometrosTrayecto}
                                             onChange={handleInputChange}
-                                            defaultValue={100}
+                                            defaultValue={0}
                                         />
                                         <FormInput
                                             label="Km de posicionamiento (vacío):"
                                             name="kilometrosPosicionamiento"
                                             value={servicioData.kilometrosPosicionamiento}
                                             onChange={handleInputChange}
-                                            defaultValue={20}
+                                            defaultValue={0}
                                         />
                                         <FormInput
                                             label="Horas del servicio:"
                                             name="horasServicio"
                                             value={servicioData.horasServicio}
                                             onChange={handleInputChange}
-                                            defaultValue={8}
+                                            defaultValue={0}
                                         />
                                     </>
                                 )}
@@ -113,9 +125,11 @@ export default function Resultados() {
 
                                 {/* Modal */}
                                 <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-                                    <DialogContent>
-                                        <DialogTitle>Información</DialogTitle>
-                                        <div className="py-4 text-center">Todavía no está implementado el cálculo.</div>
+                                    <DialogContent className="overflow-auto !sm:max-w-none !max-w-none !w-[90vw] md:!w-[75vw] lg:!w-[65vw] !h-auto min-h-[80vh] max-h-[90vh] !rounded-xl">
+                                        <DialogTitle className="text-xl sm:text-2xl font-bold mb-1 ">Resultados del cálculo</DialogTitle>
+                                        <div className="w-full overflow-auto rounded-lg bg-white p-0 sm:p-2">
+                                            <RenderResultsView/>
+                                        </div>
                                     </DialogContent>
                                 </Dialog>
                             </form>

@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { parseVehicleCsvFile } from '@/utils/csvParser';
 
 // Get all vehicle types and their data
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get all CSV files in the data directory
     const dataDir = path.join(process.cwd(), 'src', 'app', 'api', 'mercancias', 'data');

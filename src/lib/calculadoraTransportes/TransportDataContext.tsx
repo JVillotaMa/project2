@@ -20,7 +20,6 @@ export function TransportDataProvider({ children }: { children: React.ReactNode 
   const [selectedBusType, setSelectedBusType] = useState<string>('Menos de 22');
   const [currentBusData, setCurrentBusData] = useState<any>(null);
   
-  const { updateFormData } = useTransportesForm();
   
   // Fetch transport data on component mount
   useEffect(() => {
