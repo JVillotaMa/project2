@@ -49,3 +49,17 @@ function costeVariableMantenimiento(kilometrajeAnual:number, costeAnualMantenimi
 function costeVariablePeajes(serviciosAnuales:number, costeMedioPeaje:number, porcentajeServiciosNoPeaje:number){
     return serviciosAnuales * costeMedioPeaje * (1-porcentajeServiciosNoPeaje/100)
 }
+
+export {
+    costeAnualAmortizacion,
+    precioNeto,
+    costeAnualFinanciacion,
+    costeFijoPersonal,
+    costeFijoImpuestos,
+    costeFijoSeguro,
+    costeVariableCombustible,
+    costeVariableDietas,
+    costeVariableNeumaticos,
+    costeVariableMantenimiento,
+    costeVariablePeajes
+}

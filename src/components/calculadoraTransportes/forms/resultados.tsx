@@ -14,7 +14,7 @@ import ResultadosUnitarios from "./resultados/resultadosUnitarios/resultadosUnit
 
 
 export default function Resultados() {
-    const { isFormValid,formData } = useTransportesForm();
+    const { isFormValid, formData } = useTransportesForm();
     const [optionSelected, setOptionSelected] = useState("option-one");
     const [servicioData, setServicioData] = useState({
         kilometrosTrayecto: undefined,
@@ -36,13 +36,17 @@ export default function Resultados() {
         }));
     };
 
-    function RenderResultsView(){
-        if(optionSelected=="option-one"){
-            return <ResultadosUnitarios/>
+    function RenderResultsView() {
+        if (optionSelected == "option-one") {
+            return <ResultadosUnitarios 
+                kilometrosTrayecto={servicioData.kilometrosTrayecto}
+                kilometrosPosicionamiento={servicioData.kilometrosPosicionamiento}
+                horasServicio={servicioData.horasServicio}
+            />
         } else {
-            return <ResultadosPorServicio 
-                kilometrosTrayecto={servicioData.kilometrosTrayecto} 
-                kilometrosPosicionamiento={servicioData.kilometrosPosicionamiento} 
+            return <ResultadosPorServicio
+                kilometrosTrayecto={servicioData.kilometrosTrayecto}
+                kilometrosPosicionamiento={servicioData.kilometrosPosicionamiento}
                 horasServicio={servicioData.horasServicio}
             />
         }
@@ -81,34 +85,58 @@ export default function Resultados() {
                                     </RadioGroup>
                                 </div>
 
-                                {optionSelected === "option-two" && (
-                                    <>
-                                        <FormInput
-                                            label="Kilometros del trayecto (con pasajeros):"
-                                            name="kilometrosTrayecto"
-                                            value={servicioData.kilometrosTrayecto}
-                                            onChange={handleInputChange}
-                                            defaultValue={0}
-                                        />
-                                        <FormInput
-                                            label="Km de posicionamiento (vacío):"
-                                            name="kilometrosPosicionamiento"
-                                            value={servicioData.kilometrosPosicionamiento}
-                                            onChange={handleInputChange}
-                                            defaultValue={0}
-                                        />
-                                        <FormInput
-                                            label="Horas del servicio:"
-                                            name="horasServicio"
-                                            value={servicioData.horasServicio}
-                                            onChange={handleInputChange}
-                                            defaultValue={0}
-                                        />
-                                    </>
-                                )}
+
+                                <>
+                                    <FormInput
+                                        label="Kilometros del trayecto (con pasajeros):"
+                                        name="kilometrosTrayecto"
+                                        value={servicioData.kilometrosTrayecto}
+                                        onChange={handleInputChange}
+                                        defaultValue={0}
+                                    />
+                                    <FormInput
+                                        label="Km de posicionamiento (vacío):"
+                                        name="kilometrosPosicionamiento"
+                                        value={servicioData.kilometrosPosicionamiento}
+                                        onChange={handleInputChange}
+                                        defaultValue={0}
+                                    />
+                                    <FormInput
+                                        label="Horas del servicio:"
+                                        name="horasServicio"
+                                        value={servicioData.horasServicio}
+                                        onChange={handleInputChange}
+                                        defaultValue={0}
+                                    />
+                                </>
+
+                                {/* Mensajes de error para valores negativos o no ingresados */}
+                                <div className="mt-2">
+                                    {(servicioData.kilometrosTrayecto === undefined || servicioData.kilometrosTrayecto === null) && (
+                                        <p className="text-red-500 text-sm">Debe ingresar los kilómetros del trayecto.</p>
+                                    )}
+                                    {servicioData.kilometrosTrayecto !== undefined && servicioData.kilometrosTrayecto < 0 && (
+                                        <p className="text-red-500 text-sm">Los kilómetros del trayecto no pueden ser negativos.</p>
+                                    )}
+                                    
+                                    {(servicioData.kilometrosPosicionamiento === undefined || servicioData.kilometrosPosicionamiento === null) && (
+                                        <p className="text-red-500 text-sm">Debe ingresar los kilómetros de posicionamiento.</p>
+                                    )}
+                                    {servicioData.kilometrosPosicionamiento !== undefined && servicioData.kilometrosPosicionamiento < 0 && (
+                                        <p className="text-red-500 text-sm">Los kilómetros de posicionamiento no pueden ser negativos.</p>
+                                    )}
+                                    
+                                    {(servicioData.horasServicio === undefined || servicioData.horasServicio === null) && (
+                                        <p className="text-red-500 text-sm">Debe ingresar las horas del servicio.</p>
+                                    )}
+                                    {servicioData.horasServicio !== undefined && servicioData.horasServicio < 0 && (
+                                        <p className="text-red-500 text-sm">Las horas del servicio no pueden ser negativas.</p>
+                                    )}
+                                </div>
 
                                 {/* Botón calcular */}
                                 <div className="flex justify-center mt-6">
+                                    
                                     <Button
                                         className="bg-blue-600 hover:cursor-pointer text-white px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition"
                                         onClick={(e) => {
@@ -116,7 +144,17 @@ export default function Resultados() {
                                             setModalOpen(true);
                                             console.log(formData)
                                         }}
-                                        disabled={optionSelected === "option-two" && (!servicioData.kilometrosTrayecto || !servicioData.horasServicio)}
+                                        disabled={
+                                            servicioData.kilometrosTrayecto === undefined || 
+                                            servicioData.kilometrosTrayecto === null ||
+                                            servicioData.kilometrosTrayecto < 0 ||
+                                            servicioData.kilometrosPosicionamiento === undefined || 
+                                            servicioData.kilometrosPosicionamiento === null ||
+                                            servicioData.kilometrosPosicionamiento < 0 ||
+                                            servicioData.horasServicio === undefined ||
+                                            servicioData.horasServicio === null ||
+                                            servicioData.horasServicio < 0
+                                        }
                                         type="button" // Especificar tipo button para evitar submit
                                     >
                                         Calcular
@@ -128,7 +166,7 @@ export default function Resultados() {
                                     <DialogContent className="overflow-auto !sm:max-w-none !max-w-none !w-[90vw] md:!w-[75vw] lg:!w-[65vw] !h-auto min-h-[80vh] max-h-[90vh] !rounded-xl">
                                         <DialogTitle className="text-xl sm:text-2xl font-bold mb-1 ">Resultados del cálculo</DialogTitle>
                                         <div className="w-full overflow-auto rounded-lg bg-white p-0 sm:p-2">
-                                            <RenderResultsView/>
+                                            <RenderResultsView />
                                         </div>
                                     </DialogContent>
                                 </Dialog>
