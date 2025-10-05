@@ -89,7 +89,7 @@ export default function Resultados() {
                         <div className="flex justify-center mt-6">
                             <button
                                 type="button"
-                                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition"
+                                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition hover:cursor-pointer disabled:cursor-default disabled:opacity-50"
                                 onClick={() => {setModalOpen(true);console.log(formData)}}
                                 disabled={optionSelected === "option-two" && (!kilometrosServicio || !horasServicio) }
                             >

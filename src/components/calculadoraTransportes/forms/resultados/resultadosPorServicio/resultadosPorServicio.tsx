@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import React, { useRef } from 'react'
+import { Button } from '@/components/ui/button'
 import SectionContainer from '@/components/shared/form/sectionContainer'
 import { useTransportesForm } from '@/lib/calculadoraTransportes/TransportesFormContext'
 import { useTransportDataContext } from '@/lib/calculadoraTransportes/TransportDataContext'
@@ -16,13 +16,6 @@ import {
     costesPorServicio
 } from '../calculos'
 
-// Colores para los gráficos - Paleta moderna y atractiva
-const colores = [
-    '#4285F4', '#EA4335', '#FBBC05', '#34A853',
-    '#8AB4F8', '#F6AEA9', '#FDE293', '#A8DAB5',
-    '#7986CB', '#F06292', '#FFD54F', '#81C784'
-]
-
 // Definición de tipos para las props
 interface ResultadosPorServicioProps {
     kilometrosTrayecto?: number;
@@ -31,23 +24,18 @@ interface ResultadosPorServicioProps {
 }
 
 export default function ResultadosPorServicio({
-    kilometrosTrayecto = 100,
-    kilometrosPosicionamiento = 20,
-    horasServicio = 8
+    kilometrosTrayecto = 1,
+    kilometrosPosicionamiento = 0,
+    horasServicio = 1
 }: ResultadosPorServicioProps) {
     const { formData } = useTransportesForm();
     const { currentBusData } = useTransportDataContext();
+    const resultadosRef = useRef<HTMLDivElement>(null);
+    const graficoRef = useRef<HTMLDivElement>(null);
 
-    // Usar los datos del servicio recibidos por props
-    const servicioData = {
-        kilometrosTrayecto,
-        kilometrosPosicionamiento,
-        horasServicio
-    };
-
-    // Cálculo de costes unitarios por km y hora (similar a ResultadosUnitarios)
+    // Calcular costes por km
     const calcularCostesPorKm = () => {
-        if (!formData) {
+        if (!formData || !currentBusData) {
             return { combustible: 0, neumaticos: 0, mantenimiento: 0 };
         }
 
@@ -56,11 +44,13 @@ export default function ResultadosPorServicio({
         const costeNeumatico = formData.costeNeumatico || 0;
         const vidaUtilNeumatico = formData.vidaUtilNeumatico || 1;
         const mantenimientoAnual = formData.mantenimientoAnual || 0;
-        const numeroNeumaticos = currentBusData && typeof currentBusData['Numero Neumaticos'] === 'number'
+        const numeroNeumaticos = typeof currentBusData['Numero Neumaticos'] === 'number'
             ? currentBusData['Numero Neumaticos']
             : 6;
         
-        const consumo = currentBusData["Consumo medio (L)"]
+        const consumo = typeof currentBusData["Consumo medio (L)"] === 'number' 
+            ? currentBusData["Consumo medio (L)"] 
+            : 0;
         
         return {
             combustible: costeCombustibleKm(costeDelCombustible, consumo),
@@ -69,6 +59,7 @@ export default function ResultadosPorServicio({
         };
     };
 
+    // Calcular costes por hora
     const calcularCostesPorHora = () => {
         if (!formData) {
             return { amortizacion: 0, financiacion: 0, personal: 0, seguros: 0 };
@@ -90,9 +81,15 @@ export default function ResultadosPorServicio({
         };
     };
 
-    // Calcular costes por km y hora
+    // Obtener costes unitarios
     const costesPorKm = calcularCostesPorKm();
     const costesPorHora = calcularCostesPorHora();
+    
+    // Costes unitarios totales
+    const costeKmTotal = costesPorKm.combustible + costesPorKm.mantenimiento + costesPorKm.neumaticos;
+    const costeHoraTotal = costesPorHora.amortizacion + costesPorHora.financiacion + 
+                         costesPorHora.personal + costesPorHora.seguros;
+    const costesGeneralesPorc = formData?.costesGenerales || 0;
     
     // Calcular costes del servicio
     const costesServicio = costesPorServicio(
@@ -103,166 +100,234 @@ export default function ResultadosPorServicio({
         costesPorHora.seguros,
         costesPorHora.amortizacion,
         costesPorHora.financiacion,
-        servicioData.kilometrosTrayecto,
-        servicioData.kilometrosPosicionamiento,
-        servicioData.horasServicio,
-        formData?.costesGenerales || 0
+        kilometrosTrayecto,
+        kilometrosPosicionamiento,
+        horasServicio,
+        costesGeneralesPorc
     );
 
-    // Preparar datos para el gráfico
-    const totalKilometros = servicioData.kilometrosTrayecto + servicioData.kilometrosPosicionamiento;
+    // Totales por categoría (para el gráfico)
+    const totalKilometricos = costesServicio.costeTotalCombustible + 
+                              costesServicio.costeTotalMantenimiento + 
+                              costesServicio.costeTotalNeumaticos;
     
-    // Estructurar datos para el gráfico circular
-    const datosGrafico = [
-        { nombre: 'Combustible', valor: costesServicio.costeTotalCombustible, color: colores[0] },
-        { nombre: 'Mantenimiento', valor: costesServicio.costeTotalMantenimiento, color: colores[1] },
-        { nombre: 'Neumáticos', valor: costesServicio.costeTotalNeumaticos, color: colores[2] },
-        { nombre: 'Personal', valor: costesServicio.costeTotalConductor, color: colores[3] },
-        { nombre: 'Seguros', valor: costesServicio.costeTotalSeguro, color: colores[4] },
-        { nombre: 'Amortización', valor: costesServicio.costeTotalAmortizacion, color: colores[5] },
-        { nombre: 'Financiación', valor: costesServicio.costeTotalFinanciacion, color: colores[6] }
-    ];
+    const totalHorarios = costesServicio.costeTotalAmortizacion + 
+                          costesServicio.costeTotalFinanciacion + 
+                          costesServicio.costeTotalConductor + 
+                          costesServicio.costeTotalSeguro;
+    
+    const totalGenerales = costesServicio.costeTotalServicio - 
+                           (totalKilometricos + totalHorarios);
 
-    // Calcular el coste total sin costes generales
-    const costeTotalSinGenerales = datosGrafico.reduce((total, item) => total + item.valor, 0);
+    // Calcular porcentajes para el gráfico
+    const total = costesServicio.costeTotalServicio;
+    const porcKilometricos = total > 0 ? (totalKilometricos / total) * 100 : 0;
+    const porcHorarios = total > 0 ? (totalHorarios / total) * 100 : 0;
+    const porcGenerales = total > 0 ? (totalGenerales / total) * 100 : 0;
 
-    // Calcular porcentajes
-    const datosConPorcentajes = datosGrafico.map(item => ({
-        ...item,
-        porcentaje: costeTotalSinGenerales > 0 ? Math.round((item.valor / costeTotalSinGenerales) * 100) : 0
-    }));
+    // Fecha actual para el encabezado
+    const currentYear = new Date().getFullYear();
 
-    // Componente para el gráfico circular
-    const GraficoCircular = ({ data }: { data: typeof datosConPorcentajes }) => (
-        <div className="relative w-full aspect-square max-w-[220px] sm:max-w-[240px] md:max-w-[280px] mx-auto">
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-sm">
-                {data.reduce<React.ReactNode[]>((acc, item, i) => {
-                    // Calcular el acumulado anterior
-                    let prevTotal = 0;
-                    if (i > 0) {
-                        prevTotal = data.slice(0, i).reduce((sum, prevItem) => sum + prevItem.porcentaje, 0);
-                    }
-                    
-                    const accumulatedPercentage = prevTotal + item.porcentaje;
-                    
-                    // Calcular ángulos para el slice
-                    const startAngle = (prevTotal / 100) * 360;
-                    const endAngle = (accumulatedPercentage / 100) * 360;
-                    
-                    // Convertir ángulos a coordenadas
-                    const startX = 50 + 40 * Math.cos((startAngle - 90) * (Math.PI / 180));
-                    const startY = 50 + 40 * Math.sin((startAngle - 90) * (Math.PI / 180));
-                    const endX = 50 + 40 * Math.cos((endAngle - 90) * (Math.PI / 180));
-                    const endY = 50 + 40 * Math.sin((endAngle - 90) * (Math.PI / 180));
-                    
-                    // Bandera para determinar si el arco es mayor a 180 grados
-                    const largeArcFlag = endAngle - startAngle > 180 ? 1 : 0;
-                    
-                    // Crear el path para el slice
-                    const path = `
-                        M 50 50
-                        L ${startX} ${startY}
-                        A 40 40 0 ${largeArcFlag} 1 ${endX} ${endY}
-                        Z
-                    `;
-                    
-                    return [...acc, 
-                        <path 
-                            key={i} 
-                            d={path} 
-                            fill={item.color} 
-                            stroke="#fff" 
-                            strokeWidth="0.7"
-                            className="hover:opacity-90 transition-opacity"
-                            data-tip={`${item.nombre}: ${item.porcentaje}%`}
-                        />
-                    ];
-                }, [])}
-            </svg>
-        </div>
-    );
+    // Tipo de vehículo
+    const tipoVehiculo = currentBusData ? 
+        (typeof currentBusData['Tipo'] === 'string' ? currentBusData['Tipo'] : 'menos de 22') : 
+        'menos de 22';
 
+    // Funciones para copiar al portapapeles
+    const copiarTexto = () => {
+        if (!resultadosRef.current) return;
+        
+        const texto = `
+COVIMAD ${currentYear}
+Resultado del cálculo de costes
+---------------------------------------
+Costes unitarios por vehículo
+calculados para un servicio de:
+${kilometrosTrayecto} km con pasajeros, ${kilometrosPosicionamiento} km de posicionamiento, y ${horasServicio} horas,
+en un vehículo de ${tipoVehiculo} plazas.
+
+Costes por km:      ${costeKmTotal.toFixed(2)} euros
+Costes por hora:    ${costeHoraTotal.toFixed(2)} euros
+Costes generales:   ${costesGeneralesPorc.toFixed(2)} euros
+
+Costes totales del servicio:
+Costes/km:          ${costeKmTotal.toFixed(2)} euros x ${kilometrosTrayecto} km
+Costes/hora:        ${costeHoraTotal.toFixed(2)} euros x ${horasServicio} horas
+Costes generales:   ${totalGenerales.toFixed(2)} euros
+
+TOTAL:              ${costesServicio.costeTotalServicio.toFixed(2)} euros
+---------------------------------------
+        `;
+        
+        navigator.clipboard.writeText(texto)
+            .then(() => alert('Texto copiado al portapapeles'))
+            .catch(err => console.error('Error al copiar: ', err));
+    };
+    
+    const copiarGrafico = () => {
+        if (!graficoRef.current) return;
+        
+        // Aquí deberías usar una librería como html2canvas para capturar el gráfico
+        // Pero para simplificar, solo mostraremos un mensaje
+        alert('Funcionalidad de copiar gráfico no implementada aún');
+    };
+    
+    const imprimir = () => {
+        window.print();
+    };
+    
+    const nuevoCalculo = () => {
+        // Aquí iría la lógica para reiniciar el cálculo
+        window.location.reload();
+    };
+    
     return (
-        <div className="space-y-3 sm:space-y-6 mx-auto max-w-full">
-            <SectionContainer subSectionTitle="Costes del Servicio">
-                <div className="p-1 sm:p-2 md:p-4">
-                    <div className="text-center mb-3 text-sm sm:text-base">
-                        <p><span className="font-semibold">Servicio: </span>{totalKilometros} km totales ({servicioData.kilometrosTrayecto} km con pasajeros + {servicioData.kilometrosPosicionamiento} km de posicionamiento) durante {servicioData.horasServicio} horas</p>
+        <div className="print:shadow-none mx-auto max-w-[1000px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-300">
+            <div className="flex flex-col md:flex-row">
+                {/* Columna izquierda - Resultados de texto */}
+                <div 
+                    ref={resultadosRef} 
+                    className="w-full md:w-1/2 p-5 md:border-r border-gray-300"
+                >
+                    <div className="font-semibold mb-2">COVIMAD {currentYear}</div>
+                    <div className="font-semibold mb-3">Resultado del cálculo de costes</div>
+                    
+                    <div className="text-sm mb-4 border-b border-dashed border-gray-300 pb-2">
+                        <p>Costes unitarios por vehículo</p>
+                        <p>calculados para un servicio de:</p>
+                        <p>{kilometrosTrayecto} km con pasajeros, {kilometrosPosicionamiento} km de posicionamiento, y {horasServicio} horas,</p>
+                        <p>en un vehículo de {tipoVehiculo} plazas.</p>
                     </div>
                     
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 md:gap-6">
-                        <Card className="shadow-sm hover:shadow-md transition-shadow">
-                            <CardHeader className="pb-0 pt-2 sm:pb-1 sm:pt-3">
-                                <CardTitle className="text-sm sm:text-base md:text-lg font-medium text-center">
-                                    Desglose de Costes del Servicio
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="pt-1 pb-2 px-2 sm:pt-2 sm:pb-3 sm:px-4">
-                                <div className="space-y-1 sm:space-y-2">
-                                    {datosConPorcentajes.map((item, index) => (
-                                        <div key={index} className="flex items-center justify-between py-0.5 sm:py-1">
-                                            <div className="flex items-center">
-                                                <span 
-                                                    className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 mr-1 sm:mr-2 rounded-sm" 
-                                                    style={{ backgroundColor: item.color }}
-                                                ></span>
-                                                <span className="capitalize text-xs sm:text-sm md:text-base">{item.nombre}</span>
-                                            </div>
-                                            <div className="flex items-center space-x-1 sm:space-x-2">
-                                                <span className="font-medium text-xs sm:text-sm md:text-base">{item.valor.toFixed(2)}€</span>
-                                                <span className="text-gray-500 text-xs sm:text-sm">({item.porcentaje}%)</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    
-                                    {/* Total final */}
-                                    <div className="border-t border-gray-200 mt-1 sm:mt-3 pt-1 sm:pt-3">
-                                        <div className="flex items-center justify-between font-bold">
-                                            <span className="text-xs sm:text-sm md:text-base">SUBTOTAL</span>
-                                            <span className="text-xs sm:text-sm md:text-base">{costeTotalSinGenerales.toFixed(2)}€</span>
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Costes generales */}
-                                    <div className="flex items-center justify-between text-gray-700">
-                                        <span className="text-xs sm:text-sm md:text-base">Costes generales ({formData?.costesGenerales || 0}%)</span>
-                                        <span className="text-xs sm:text-sm md:text-base">{(costesServicio.costeTotalServicio - costeTotalSinGenerales).toFixed(2)}€</span>
-                                    </div>
-                                    
-                                    {/* Total con costes generales */}
-                                    <div className="border-t border-gray-200 mt-1 sm:mt-3 pt-1 sm:pt-3">
-                                        <div className="flex items-center justify-between font-bold text-blue-800">
-                                            <span className="text-xs sm:text-sm md:text-base">TOTAL SERVICIO</span>
-                                            <span className="text-xs sm:text-sm md:text-base">{costesServicio.costeTotalServicio.toFixed(2)}€</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                        
-                        <Card className="shadow-sm hover:shadow-md transition-shadow">
-                            <CardHeader className="pb-0 pt-2 sm:pb-1 sm:pt-3">
-                                <CardTitle className="text-sm sm:text-base md:text-lg font-medium text-center">
-                                    Distribución de Costes del Servicio
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="pt-1 pb-2 px-2 sm:pt-2 sm:pb-3 sm:px-4">
-                                <GraficoCircular data={datosConPorcentajes} />
-                                <div className="text-center mt-1 sm:mt-3 text-xs sm:text-sm text-gray-500">
-                                    Los porcentajes se calculan sobre los costes directos del servicio
-                                </div>
-                            </CardContent>
-                        </Card>
+                    <div className="mb-4">
+                        <div className="flex justify-between">
+                            <span>Costes por km:</span>
+                            <span>{costeKmTotal.toFixed(2)} euros</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Costes por hora:</span>
+                            <span>{costeHoraTotal.toFixed(2)} euros</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Costes generales:</span>
+                            <span>{costesGeneralesPorc.toFixed(2)} euros</span>
+                        </div>
                     </div>
                     
-                    {/* Información adicional */}
-                    <div className="mt-3 sm:mt-6 p-2 sm:p-4 bg-gray-50 rounded-lg text-xs sm:text-sm text-gray-700">
-                        <p className="font-semibold mb-1">Información adicional:</p>
-                        <p>El coste por kilómetro con pasajeros es: <span className="font-medium">{(costesServicio.costeTotalServicio / servicioData.kilometrosTrayecto).toFixed(2)}€/km</span></p>
-                        <p>El coste por hora de servicio es: <span className="font-medium">{(costesServicio.costeTotalServicio / servicioData.horasServicio).toFixed(2)}€/hora</span></p>
+                    <div className="mb-4 text-sm">
+                        <div className="font-semibold mb-1">Costes totales del servicio:</div>
+                        <div className="flex justify-between">
+                            <span>Costes/km:</span>
+                            <span>{costeKmTotal.toFixed(2)} euros x {kilometrosTrayecto} km</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Costes/hora:</span>
+                            <span>{costeHoraTotal.toFixed(2)} euros x {horasServicio} horas</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Costes generales:</span>
+                            <span>{totalGenerales.toFixed(2)} euros</span>
+                        </div>
+                    </div>
+                    
+                    <div className="flex justify-between font-semibold border-t border-dashed border-gray-300 pt-2">
+                        <span>TOTAL:</span>
+                        <span>{costesServicio.costeTotalServicio.toFixed(2)} euros</span>
+                    </div>
+                    
+                    <div className="mt-4 border-t border-dashed border-gray-300 pt-2"></div>
+                </div>
+                
+                {/* Columna derecha - Gráfico */}
+                <div 
+                    ref={graficoRef} 
+                    className="w-full md:w-1/2 p-5 flex flex-col"
+                >
+                    <div className="text-center text-blue-700 font-semibold mb-4">
+                        Distribución de costes
+                    </div>
+                    
+                    {/* Gráfico de tipo pie */}
+                    <div className="flex-grow flex items-center justify-center">
+                        <svg viewBox="0 0 100 100" className="w-48 h-48">
+                            {/* Círculo base verde (costes horarios) */}
+                            <circle cx="50" cy="50" r="40" fill="#34A853" />
+
+                            {/* Sector para costes kilométricos (rojo) */}
+                            <path 
+                                d={`M 50 50 
+                                   L ${50 + 40 * Math.cos((- 90 + porcHorarios * 3.6) * Math.PI / 180)} 
+                                     ${50 + 40 * Math.sin((- 90 + porcHorarios * 3.6) * Math.PI / 180)} 
+                                   A 40 40 0 ${porcKilometricos > 50 ? 1 : 0} 1 
+                                     ${50 + 40 * Math.cos((- 90 + (porcHorarios + porcKilometricos) * 3.6) * Math.PI / 180)} 
+                                     ${50 + 40 * Math.sin((- 90 + (porcHorarios + porcKilometricos) * 3.6) * Math.PI / 180)} 
+                                   Z`}
+                                fill="#EA4335"
+                            />
+
+                            {/* Sector para costes generales (azul) */}
+                            <path 
+                                d={`M 50 50 
+                                   L ${50 + 40 * Math.cos((- 90 + (porcHorarios + porcKilometricos) * 3.6) * Math.PI / 180)} 
+                                     ${50 + 40 * Math.sin((- 90 + (porcHorarios + porcKilometricos) * 3.6) * Math.PI / 180)} 
+                                   A 40 40 0 ${porcGenerales > 50 ? 1 : 0} 1 
+                                     ${50 + 40 * Math.cos((-90) * Math.PI / 180)} 
+                                     ${50 + 40 * Math.sin((-90) * Math.PI / 180)} 
+                                   Z`}
+                                fill="#4285F4"
+                            />
+                        </svg>
+                    </div>
+                    
+                    {/* Leyenda */}
+                    <div className="mt-4 flex flex-col items-start">
+                        <div className="flex items-center mb-1">
+                            <div className="w-4 h-4 bg-[#EA4335] mr-2"></div>
+                            <span>Kilométricos</span>
+                        </div>
+                        <div className="flex items-center mb-1">
+                            <div className="w-4 h-4 bg-[#34A853] mr-2"></div>
+                            <span>Horarios</span>
+                        </div>
+                        <div className="flex items-center">
+                            <div className="w-4 h-4 bg-[#4285F4] mr-2"></div>
+                            <span>Generales</span>
+                        </div>
+                    </div>
+                    
+                    {/* Botones para copiar */}
+                    <div className="mt-6 grid grid-cols-1 gap-2">
+                        <Button 
+                            variant="outline"
+                            className="border border-gray-300 bg-gray-100 text-black" 
+                            onClick={copiarTexto}
+                        >
+                            Copiar texto al portapapeles
+                        </Button>
+                        <Button 
+                            variant="outline"
+                            className="border border-gray-300 bg-gray-100 text-black" 
+                            onClick={copiarGrafico}
+                        >
+                            Copiar gráfico al portapapeles
+                        </Button>
+                        <Button 
+                            variant="outline"
+                            className="border border-gray-300 bg-gray-100 text-black mt-4" 
+                            onClick={imprimir}
+                        >
+                            Imprimir
+                        </Button>
+                        <Button 
+                            variant="outline"
+                            className="border border-gray-300 bg-gray-100 text-black font-semibold mt-2" 
+                            onClick={nuevoCalculo}
+                        >
+                            Nuevo Cálculo
+                        </Button>
                     </div>
                 </div>
-            </SectionContainer>
+            </div>
         </div>
     );
 }
