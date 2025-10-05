@@ -2,7 +2,6 @@
 
 import React, { useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import SectionContainer from '@/components/shared/form/sectionContainer'
 import { useTransportesForm } from '@/lib/calculadoraTransportes/TransportesFormContext'
 import { useTransportDataContext } from '@/lib/calculadoraTransportes/TransportDataContext'
 import {
@@ -180,15 +179,211 @@ Costes generales: (${porcGenerales.toFixed(1)}%) ${totalGenerales.toFixed(2)} eu
     };
 
     const copiarGrafico = () => {
-        if (!graficoRef.current) return;
+        try {
+            // Obtenemos la referencia al contenedor
+            if (!graficoRef.current) return;
+            
+            // Crear un nuevo SVG personalizado que no dependa de variables CSS
+            const newSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            newSvg.setAttribute('width', '600');  // Más grande para mejor calidad
+            newSvg.setAttribute('height', '600');
+            newSvg.setAttribute('viewBox', '0 0 200 200');
+            
+            // Crear un grupo principal para el gráfico
+            const mainGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            mainGroup.setAttribute('transform', 'translate(100, 100) rotate(15)');
+            newSvg.appendChild(mainGroup);
+            
+            // Definir los sectores con colores explícitos
+            const sectores = [
+                { nombre: "Mantenimiento", porcentaje: porcMantenimiento, color: '#CC0000' },
+                { nombre: "Combustible", porcentaje: porcCombustible, color: '#00CC00' },
+                { nombre: "Neumáticos", porcentaje: porcNeumaticos, color: '#0000CC' },
+                { nombre: "Financieros", porcentaje: porcFinancieros, color: '#888888' },
+                { nombre: "Seguros", porcentaje: porcSeguros, color: '#FF00FF' },
+                { nombre: "Amortización", porcentaje: porcAmortizacion, color: '#00FFFF' },
+                { nombre: "Conductor", porcentaje: porcConductor, color: '#333333' },
+                { nombre: "Generales", porcentaje: porcGenerales, color: '#880000' }
+            ];
+            
+            // Función para crear un sector del gráfico
+            const createSectorPath = (percentage: number, color: string, startAngle: number): SVGPathElement => {
+                const r = 70; // radio
+                
+                // Convertimos porcentaje a ángulo (en radianes)
+                const angle = (percentage / 100) * 2 * Math.PI;
+                const endAngle = startAngle + angle;
 
-        // Aquí deberías usar una librería como html2canvas para capturar el gráfico
-        // Pero para simplificar, solo mostraremos un mensaje
-        alert('Funcionalidad de copiar gráfico no implementada aún');
+                // Calculamos puntos iniciales y finales
+                const x1 = r * Math.cos(startAngle);
+                const y1 = r * Math.sin(startAngle);
+                const x2 = r * Math.cos(endAngle);
+                const y2 = r * Math.sin(endAngle);
+                
+                // Determinamos si el arco es mayor a 180 grados
+                const largeArcFlag = percentage > 50 ? 1 : 0;
+                
+                // Creamos el path
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M 0 0 L ${x1} ${y1} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`);
+                path.setAttribute('fill', color);
+                path.setAttribute('stroke', '#FFFFFF');
+                path.setAttribute('stroke-width', '1');
+                
+                return path;
+            };
+            
+            // Añadir todos los sectores
+            let currentAngle = 0;
+            sectores.forEach(sector => {
+                if (sector.porcentaje > 0) {
+                    const sectorPath = createSectorPath(sector.porcentaje, sector.color, currentAngle);
+                    mainGroup.appendChild(sectorPath);
+                    currentAngle += (sector.porcentaje / 100) * 2 * Math.PI;
+                }
+            });
+            
+            // Eliminado el título para copiar solo el gráfico sin texto
+            
+            // Convertir el SVG a una cadena
+            const serializer = new XMLSerializer();
+            const svgString = serializer.serializeToString(newSvg);
+            
+            // Crear un blob con el SVG
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            
+            // Crear un canvas y dibujar el SVG en él
+            const img = new Image();
+            const url = URL.createObjectURL(blob);
+            
+            img.onload = function() {
+                // Crear un canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = 600;
+                canvas.height = 600;
+                const ctx = canvas.getContext('2d');
+                
+                if (!ctx) {
+                    console.error('No se pudo obtener el contexto del canvas');
+                    alert('Error al copiar el gráfico');
+                    return;
+                }
+                
+                // Dibujar fondo blanco
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Dibujar la imagen SVG
+                ctx.drawImage(img, 0, 0);
+                
+                // Convertir el canvas a un blob para copiar al portapapeles
+                canvas.toBlob((imgBlob) => {
+                    if (!imgBlob) {
+                        console.error('Error al convertir canvas a blob');
+                        alert('Error al copiar el gráfico');
+                        return;
+                    }
+                    
+                    // Intentar copiar al portapapeles
+                    try {
+                        const clipboardItem = new ClipboardItem({ 'image/png': imgBlob });
+                        navigator.clipboard.write([clipboardItem])
+                            .then(() => {
+                                alert('Gráfico copiado al portapapeles');
+                            })
+                            .catch((err) => {
+                                console.error('Error al copiar al portapapeles:', err);
+                                
+                                // Fallback: descargar la imagen
+                                const imgUrl = URL.createObjectURL(imgBlob);
+                                const link = document.createElement('a');
+                                link.href = imgUrl;
+                                link.download = 'grafico-costes-servicio.png';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                
+                                alert('No se pudo copiar directamente. Se ha descargado el gráfico como imagen.');
+                            });
+                    } catch (err) {
+                        console.error('Error al usar ClipboardItem:', err);
+                        
+                        // Fallback para navegadores que no soportan clipboard API
+                        const imgUrl = URL.createObjectURL(imgBlob);
+                        const link = document.createElement('a');
+                        link.href = imgUrl;
+                        link.download = 'grafico-costes-servicio.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        alert('No se pudo copiar directamente. Se ha descargado el gráfico como imagen.');
+                    }
+                }, 'image/png', 1.0);
+                
+                // Liberar recursos
+                URL.revokeObjectURL(url);
+            };
+            
+            img.src = url;
+        } catch (error) {
+            console.error('Error al capturar el gráfico:', error);
+            alert('Error al copiar el gráfico');
+        }
     };
 
     const imprimir = () => {
-        window.print();
+        // Añadir clases temporales para impresión
+        const container = document.querySelector('.mx-auto.max-w-\\[1000px\\]');
+        const buttons = document.querySelectorAll('button');
+        
+        if (container) {
+            container.classList.add('print-container');
+            
+            // Guardar el estado original del flex-direction
+            const flexContainers = document.querySelectorAll('.flex.flex-col.md\\:flex-row');
+            flexContainers.forEach(el => {
+                el.classList.add('print-flex-row');
+            });
+            
+            // Ocultar todos los botones durante la impresión
+            buttons.forEach(btn => {
+                btn.classList.add('no-print');
+            });
+            
+            // Configurar altura máxima para componentes gráficos
+            const chartContainers = document.querySelectorAll('[data-highcharts-chart]');
+            chartContainers.forEach(chart => {
+                const parent = chart.parentElement;
+                if (parent) {
+                    parent.style.maxHeight = '300px';
+                    parent.classList.add('chart-container');
+                }
+            });
+            
+            // Disparar la impresión
+            window.print();
+            
+            // Restaurar clases después de imprimir
+            setTimeout(() => {
+                container.classList.remove('print-container');
+                flexContainers.forEach(el => {
+                    el.classList.remove('print-flex-row');
+                });
+                buttons.forEach(btn => {
+                    btn.classList.remove('no-print');
+                });
+                chartContainers.forEach(chart => {
+                    const parent = chart.parentElement;
+                    if (parent) {
+                        parent.style.maxHeight = '';
+                    }
+                });
+            }, 1000);
+        } else {
+            // Fallback
+            window.print();
+        }
     };
 
     const nuevoCalculo = () => {
@@ -197,15 +392,15 @@ Costes generales: (${porcGenerales.toFixed(1)}%) ${totalGenerales.toFixed(2)} eu
     };
 
     return (
-        <div className="print:shadow-none mx-auto max-w-[1000px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-300">
+        <div className="print:shadow-none print-container mx-auto max-w-[1000px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-300">
             <div className="bg-gray-100 px-4 py-2 font-semibold border-b border-gray-300">
                 Resultados
             </div>
-            <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col md:flex-row print-flex-row">
                 {/* Columna izquierda - Resultados de texto */}
                 <div
                     ref={resultadosRef}
-                    className="w-full md:w-1/2 p-5 md:border-r border-gray-300"
+                    className="w-full md:w-1/2 print-width-half p-5 md:border-r border-gray-300"
                 >
                     <div className="font-semibold mb-3">Resultado del cálculo de costes</div>
 
@@ -282,7 +477,7 @@ Costes generales: (${porcGenerales.toFixed(1)}%) ${totalGenerales.toFixed(2)} eu
                 {/* Columna derecha - Gráfico */}
                 <div
                     ref={graficoRef}
-                    className="w-full md:w-1/2 p-5 flex flex-col"
+                    className="w-full md:w-1/2 print-width-half p-5 flex flex-col bg-white"
                 >
                     <div className="text-center text-blue-700 font-semibold mb-4">
                         <a href="#" className="underline hover:text-blue-800">Distribución de costes</a>
