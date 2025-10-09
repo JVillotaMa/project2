@@ -180,6 +180,7 @@ export function MercanciasFormProvider({ children }: { children: React.ReactNode
     try {
       if (visitedSections.vehiculo) {
         const vehiculoData = {
+          tipoVehiculo: formData.tipoVehiculo,
           cv: formData.cv,
           mma: formData.mma,
           cargaUtil: formData.cargaUtil,
@@ -190,6 +191,7 @@ export function MercanciasFormProvider({ children }: { children: React.ReactNode
         
         // Check if all fields have been filled by the user
         const hasAllFields = 
+          vehiculoData.tipoVehiculo !== undefined &&
           vehiculoData.cv !== undefined && 
           vehiculoData.mma !== undefined && 
           vehiculoData.cargaUtil !== undefined && 

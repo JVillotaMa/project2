@@ -22,8 +22,8 @@ function costeFijoPersonal(retribucionAnualConductor:number,seguridadSocial:numb
     return retribucionAnualConductor + (retribucionAnualConductor * seguridadSocial/100) + plusDeAsistencia
 }
 
-function costeFijoImpuestos(costeVisado:number,impuestoVTM:number,costeITV:number,impuestoIAE:number,costeRevTacografo:number){
-    return costeVisado + impuestoVTM + costeITV + impuestoIAE + costeRevTacografo
+function costeFijoImpuestos(costeVisado:number,impuestoVTM:number,costeITV:number,impuestoIAE:number,costeRevTacografo:number,costeAtp:number,costeAdr:number){
+    return costeVisado + impuestoVTM + costeITV + impuestoIAE + costeRevTacografo + costeAtp + costeAdr
 }
 
 function costeFijoSeguro(responsabilidadCivil:number,seguroMercancia:number,propiosObligatoriosTerceros:number){
@@ -47,7 +47,7 @@ function costeVariableMantenimiento(kilometrajeAnual:number, costeAnualMantenimi
 }
 
 function costeVariablePeajes(serviciosAnuales:number, costeMedioPeaje:number, porcentajeServiciosNoPeaje:number){
-    return serviciosAnuales * costeMedioPeaje * (1-porcentajeServiciosNoPeaje/100)
+    return serviciosAnuales * costeMedioPeaje * (porcentajeServiciosNoPeaje/100)
 }
 
 export {

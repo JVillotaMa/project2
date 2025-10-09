@@ -22,7 +22,7 @@ import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormCon
 
 export default function SeleccionTipoVehiculo() {
     const [indexVehiculo, setIndexVehiculo] = React.useState<number | null>(null)
-    const { formData } = useMercanciasForm()
+    const { formData, updateFormData } = useMercanciasForm()
     // Use the vehicle data context instead of the hook
     const { 
         isLoading, 
@@ -31,10 +31,14 @@ export default function SeleccionTipoVehiculo() {
     } = useVehicleDataContext();
 
     function onSelectVehiculo(index: number) {
-        console.log('Selected vehicle at index:', index, 'with name:', vehiculos[index].nombreVehiculo);
+        const vehicleName = vehiculos[index].nombreVehiculo;
         setIndexVehiculo(index);
         // Fetch vehicle data from the context
-        fetchVehicleData(vehiculos[index].nombreVehiculo);
+        fetchVehicleData(vehicleName);
+        // Guardar el nombre del vehículo en formData
+        updateFormData({
+            tipoVehiculo: vehicleName
+        });
     }
 
 
