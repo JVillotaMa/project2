@@ -69,7 +69,6 @@ export default function Seguros() {
                             <RadioGroup 
                                 value={optionSelected} 
                                 onValueChange={handleOptionChange}
-                                defaultValue="Obligatorios"
                             >
                                 <div className="flex flex-row justify-between">
                                     <div className="flex items-center space-x-2 w-[50%]">

@@ -13,14 +13,12 @@ import {
 } from '../calculos'
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
 import { Button } from '@/components/ui/button';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
-import ResultadosUnitariosDetallados from "./resultadosUnitariosDetallados";
 
 export default function ResultadosUnitarios(){
     const { formData } = useMercanciasForm();
     const resultadosRef = useRef<HTMLDivElement>(null);
-    const [vistaDetallada, setVistaDetallada] = useState(false);
     
     // Calcular costes fijos anuales
     function calcularCostesFijos() {
@@ -140,32 +138,12 @@ export default function ResultadosUnitarios(){
     };
 
     return (
-        <>
-            {vistaDetallada ? (
-                <div className="flex flex-col">
-                    <ResultadosUnitariosDetallados />
-                    <div className="p-4 flex justify-center gap-4 print:hidden">
-                        <Button
-                            onClick={imprimir}
-                            className="bg-gray-200 text-black border border-gray-300 hover:bg-gray-300"
-                        >
-                            Imprimir
-                        </Button>
-                        <Button
-                            className="bg-green-500 text-white hover:bg-green-600"
-                            onClick={() => setVistaDetallada(false)}
-                        >
-                            Resumen de resultados
-                        </Button>
-                    </div>
-                </div>
-            ) : (
-                <div ref={resultadosRef} className="print:shadow-none mx-auto max-w-[800px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-300 font-mono text-sm">
-                    {/* Cabecera */}
-                    <div className="text-center p-2 border-b border-gray-400">
-                        <div className="text-lg font-bold">{tipoVehiculo}</div>
-                        <div className="border-b border-dashed border-gray-500 mx-auto w-3/4 my-1"></div>
-                    </div>
+        <div ref={resultadosRef} className="print:shadow-none mx-auto max-w-[800px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-300 font-mono text-sm">
+            {/* Cabecera */}
+            <div className="text-center p-2 border-b border-gray-400">
+                <div className="text-lg font-bold">{tipoVehiculo}</div>
+                <div className="border-b border-dashed border-gray-500 mx-auto w-3/4 my-1"></div>
+            </div>
             
             {/* Datos generales */}
             <div className="p-4">
@@ -255,7 +233,7 @@ export default function ResultadosUnitarios(){
                 </Button>
                 <Button
                     className="bg-blue-500 text-white hover:bg-blue-600"
-                    onClick={() => setVistaDetallada(true)}
+                    onClick={() => window.open('/calculadoraMercancias/calculo-detallado', '_blank')}
                 >
                     Cálculo Detallado
                 </Button>
@@ -266,7 +244,5 @@ export default function ResultadosUnitarios(){
                 </Button>
             </div>
         </div>
-            )}
-        </>
     );
 }
