@@ -1,0 +1,173 @@
+/* Optimized print styles for the Cost Calculator */
+@media print {
+  /* Base print settings */
+  @page {
+    size: A4;
+    margin: 20mm 15mm;
+  }
+  
+  /* Hide non-printable elements */
+  .no-print,
+  button,
+  nav,
+  .navigation,
+  .buttons-container,
+  form > button,
+  input[type="button"],
+  input[type="submit"] {
+    display: none !important;
+  }
+  
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Basic body formatting for print */
+  html, body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    font-family: 'Arial', 'Helvetica', sans-serif !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  
+  /* Main container formatting */
+  .print-container,
+  .resultados-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    position: relative !important;
+    overflow: visible !important;
+    float: none !important;
+    display: block !important;
+  }
+  
+  /* Prevent page breaks inside result cards */
+  .resultado-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 15px !important;
+    border: 1px solid #ddd !important;
+    padding: 10px !important;
+  }
+  
+  /* Grid layout adjustments */
+  .grid {
+    display: block !important;
+  }
+  
+  .grid > div {
+    width: 100% !important;
+    margin-bottom: 10mm !important;
+    page-break-inside: avoid !important;
+  }
+  
+  /* Typography adjustments */
+  h1 { font-size: 24pt !important; margin-bottom: 10pt !important; }
+  h2 { font-size: 18pt !important; margin-bottom: 8pt !important; }
+  h3 { font-size: 14pt !important; margin-bottom: 6pt !important; }
+  h4, h5 { font-size: 12pt !important; margin-bottom: 4pt !important; }
+  p { font-size: 10pt !important; }
+  
+  /* All text should be black or dark gray for better contrast */
+  * {
+    color: black !important;
+    text-shadow: none !important;
+  }
+  
+  /* Background colors - either remove them or ensure they print properly */
+  .bg-gradient-to-r,
+  .bg-gray-50,
+  .bg-white,
+  [class*="bg-"] {
+    background: white !important;
+    background-image: none !important;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Ensure borders print well */
+  .border,
+  .border-t,
+  .border-b,
+  .border-l,
+  .border-r {
+    border-color: #ddd !important;
+    border-width: 1px !important;
+  }
+  
+  /* Remove shadows */
+  .shadow,
+  .shadow-md,
+  .shadow-lg,
+  .shadow-sm,
+  [class*="shadow"] {
+    box-shadow: none !important;
+  }
+  
+  /* Better spacing for content blocks */
+  .p-4, .p-5, .p-6, .px-4, .py-4, .pt-4, .pb-4, .pl-4, .pr-4 {
+    padding: 10px !important;
+  }
+  
+  .m-4, .m-5, .m-6, .mx-4, .my-4, .mt-4, .mb-4, .ml-4, .mr-4 {
+    margin: 5mm !important;
+  }
+  
+  /* Table formatting for print */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 15mm !important;
+  }
+  
+  table td, table th {
+    border: 1px solid #ddd !important;
+    padding: 5pt !important;
+  }
+  
+  /* Flex adjustments - convert to block for more reliable printing */
+  .flex {
+    display: block !important;
+  }
+  
+  /* Ensure charts and diagrams print properly */
+  svg, .chart-container {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid !important;
+    max-height: 200mm !important;
+  }
+  
+  /* Force all backgrounds and colors to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Hide scrollbars */
+  ::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  
+  /* Fix any elements that might be absolutely positioned */
+  [style*="position: absolute"],
+  [style*="position:absolute"] {
+    position: static !important;
+  }
+}

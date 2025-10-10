@@ -161,8 +161,8 @@ export default function DatosGenerales() {
                         value={formData.costesGenerales}
                         onChange={handleInputChange}
                         error={getErrorMessage('costesGenerales')}
-                        defaultValue={currentBusData && typeof currentBusData['Costes generales'] === 'number'
-                            ? currentBusData['Costes generales']
+                        defaultValue={currentBusData && typeof currentBusData['Costes generales (%)'] === 'number'
+                            ? currentBusData['Costes generales (%)']
                             : 0}
                     />
                 </div>

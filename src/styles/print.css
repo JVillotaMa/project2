@@ -1,0 +1,79 @@
+/* Estilos optimizados para impresión */
+@media print {
+  /* Configuración de página */
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+  
+  /* Ocultar elementos no imprimibles */
+  .no-print,
+  button,
+  nav,
+  input[type="button"],
+  input[type="submit"] {
+    display: none !important;
+  }
+  
+  /* Mostrar elementos solo para impresión */
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Formato básico del documento */
+  html, body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+    line-height: 1.3 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  
+  /* Contenedor principal de resultados */
+  .print-container,
+  .resultados-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  
+  /* Evitar cortes en tarjetas de resultados */
+  .resultado-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* Mejorar contraste y legibilidad */
+  .text-white {
+    color: black !important;
+  }
+  
+  /* Eliminar estilos visuales que dificultan la impresión */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Clases de utilidad para impresión */
+  .print-flex-row {
+    display: flex !important;
+  }
+  
+  .print-width-full {
+    width: 100% !important;
+  }
+  
+  .print-width-half {
+    width: 50% !important;
+  }
+}

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 // -------------------- Vehículo --------------------
 export const vehiculoSchema = z.object({
+  tipoVehiculo: z.string().optional(), // Nombre del vehículo seleccionado
   cv: z.number().min(0, "El campo CV debe estar relleno").nullable(),
   mma: z.number().min(0, "El campo MMA debe estar relleno").nullable(),
   cargaUtil: z.number().min(0, "El campo Carga útil debe estar relleno").nullable(),

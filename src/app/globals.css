@@ -120,3 +120,15 @@
     @apply border-border outline-ring/50;}
   body {
     @apply bg-background text-foreground;}}
+
+/* Estilos básicos para impresión (los estilos completos están en print.css) */
+@media print {
+  /* Estilos básicos para impresión - el resto están en print.css */
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  
+  /* Clases de utilidad */
+  .print-flex-row { display: flex !important; }
+  .print-width-full { width: 100% !important; }
+  .print-width-half { width: 50% !important; }
+}
