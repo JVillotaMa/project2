@@ -1,55 +1,79 @@
-/* Estilos específicos para impresión */
+/* Estilos optimizados para impresión */
 @media print {
-  /* Ocultar botones y elementos no necesarios para impresión */
-  button {
+  /* Configuración de página */
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+  
+  /* Ocultar elementos no imprimibles */
+  .no-print,
+  button,
+  nav,
+  input[type="button"],
+  input[type="submit"] {
     display: none !important;
   }
   
-  /* Asegurar que el contenido se muestre en una sola página */
-  .print-container {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+  /* Mostrar elementos solo para impresión */
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
   }
   
-  /* Eliminar sombras y bordes innecesarios */
-  .print-container * {
+  /* Formato básico del documento */
+  html, body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+    line-height: 1.3 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  
+  /* Contenedor principal de resultados */
+  .print-container,
+  .resultados-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
     box-shadow: none !important;
-    -webkit-print-color-adjust: exact !important;
-    color-adjust: exact !important;
+    border: none !important;
   }
   
-  /* Ajustar el layout para la impresión */
+  /* Evitar cortes en tarjetas de resultados */
+  .resultado-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* Mejorar contraste y legibilidad */
+  .text-white {
+    color: black !important;
+  }
+  
+  /* Eliminar estilos visuales que dificultan la impresión */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Clases de utilidad para impresión */
   .print-flex-row {
     display: flex !important;
-    flex-direction: row !important;
   }
   
-  /* Ajustar tamaños para impresión */
   .print-width-full {
     width: 100% !important;
   }
   
   .print-width-half {
     width: 50% !important;
-  }
-  
-  /* Ocultar elementos específicos */
-  .no-print {
-    display: none !important;
-  }
-  
-  /* Forzar el fondo blanco y texto negro */
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  
-  /* Evitar cortes en elementos importantes */
-  svg, .chart-container {
-    break-inside: avoid;
-    page-break-inside: avoid;
   }
 }

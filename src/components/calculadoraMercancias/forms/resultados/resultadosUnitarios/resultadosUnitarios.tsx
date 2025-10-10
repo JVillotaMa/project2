@@ -14,7 +14,6 @@ import {
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
 import { Button } from '@/components/ui/button';
 import { useRef, useState } from 'react';
-import { useVehicleDataContext } from "@/lib/calculadoraMercancias/VehicleDataContext";
 import ResultadosUnitariosDetallados from "./resultadosUnitariosDetallados";
 
 export default function ResultadosUnitarios(){
@@ -134,25 +133,33 @@ export default function ResultadosUnitarios(){
     // Calcular todos los costes unitarios
     const costesUnitarios = calcularCostesUnitarios();
     
-    // Función para imprimir
-    const imprimir = () => {
-        window.print();
-    };
+    // Datos principales para mostrar en tarjetas
+    const datosPrincipales = [
+        { 
+            titulo: "Costes por Km", 
+            valor: costesUnitarios.costesKm.directosPorKm.toFixed(4) + " €/km",
+            descripcion: "Costes directos por kilómetro" 
+        },
+        { 
+            titulo: "Costes por Servicio", 
+            valor: costesUnitarios.costesServicio.directosPorServicio.toFixed(2) + " €/serv",
+            descripcion: "Costes directos por servicio" 
+        },
+        { 
+            titulo: "Costes por Día", 
+            valor: costesUnitarios.costesTiempo.fijosPorDia.toFixed(2) + " €/día",
+            descripcion: "Costes fijos por día de actividad" 
+        }
+    ];
 
     return (
         <>
             {vistaDetallada ? (
                 <div className="flex flex-col">
                     <ResultadosUnitariosDetallados />
-                    <div className="p-4 flex justify-center gap-4 print:hidden">
+                    <div className="p-4 flex justify-center gap-4 no-print">
                         <Button
-                            onClick={imprimir}
-                            className="bg-gray-200 text-black border border-gray-300 hover:bg-gray-300"
-                        >
-                            Imprimir
-                        </Button>
-                        <Button
-                            className="bg-green-500 text-white hover:bg-green-600"
+                            className="bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 shadow-md transition-all"
                             onClick={() => setVistaDetallada(false)}
                         >
                             Resumen de resultados
@@ -160,112 +167,139 @@ export default function ResultadosUnitarios(){
                     </div>
                 </div>
             ) : (
-                <div ref={resultadosRef} className="print:shadow-none mx-auto max-w-[800px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-300 font-mono text-sm">
-                    {/* Cabecera */}
-                    <div className="text-center p-2 border-b border-gray-400">
-                        <div className="text-lg font-bold">{tipoVehiculo}</div>
-                        <div className="border-b border-dashed border-gray-500 mx-auto w-3/4 my-1"></div>
+                <div ref={resultadosRef} className="print-container bg-white rounded-lg overflow-hidden font-sans w-full">
+                    
+                    {/* Cabecera con gradiente (visible solo en pantalla) */}
+                    <div className="bg-gradient-to-r from-primary-600 to-primary-400 text-white p-4 shadow-md no-print">
+                        <div className="text-center">
+                            <h2 className="text-xl font-bold text-black">{tipoVehiculo}</h2>
+                        </div>
                     </div>
             
-            {/* Datos generales */}
-            <div className="p-4">
-                <div className="flex flex-col gap-2">
-                    <div className="flex justify-between">
-                        <span>Kilometros anuales:</span>
-                        <span>{costesUnitarios.kilometrosAnuales.toLocaleString()}</span>
+                    {/* Datos generales en tarjetas */}
+                    <div className="p-6 bg-gray-50">
+                        <h3 className="text-lg font-medium text-gray-800 mb-4">Datos generales</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">Kilómetros anuales:</span>
+                                    <span className="font-medium">{costesUnitarios.kilometrosAnuales.toLocaleString()} km</span>
+                                </div>
+                            </div>
+                            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">Servicios anuales:</span>
+                                    <span className="font-medium">{costesUnitarios.serviciosAnuales.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Tarjetas de datos principales */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {datosPrincipales.map((dato, index) => (
+                                <div key={index} className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden resultado-card">
+                                    <div className="bg-gradient-to-r from-primary-50 to-white p-3 border-b border-gray-200">
+                                        <h4 className="font-medium text-primary-800">{dato.titulo}</h4>
+                                    </div>
+                                    <div className="p-4">
+                                        <div className="text-2xl font-bold text-gray-800">{dato.valor}</div>
+                                        <div className="text-sm text-gray-500 mt-1">{dato.descripcion}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <div className="flex justify-between">
-                        <span>Servicios anuales:</span>
-                        <span>{costesUnitarios.serviciosAnuales.toLocaleString()}</span>
+            
+                    {/* Sección de costes detallados */}
+                    <div className="p-6 border-t border-gray-200">
+                        <h3 className="text-lg font-medium text-gray-800 mb-4">Costes detallados</h3>
+                        
+                        {/* Costes por kilómetro */}
+                        <div className="mb-6 resultado-card">
+                            <div className="bg-gray-50 p-3 rounded-t-lg border border-gray-200 mb-1">
+                                <h4 className="font-medium text-gray-700">Costes por kilómetro</h4>
+                            </div>
+                            <div className="bg-white rounded-b-lg shadow-sm border-x border-b border-gray-200">
+                                <div className="divide-y divide-gray-200">
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Fijos por Km:</span>
+                                        <span className="font-medium">{costesUnitarios.costesKm.fijosPorKm.toFixed(4)} €/Km</span>
+                                    </div>
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Variables por Km:</span>
+                                        <span className="font-medium">{costesUnitarios.costesKm.variablesPorKm.toFixed(4)} €/Km</span>
+                                    </div>
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Directos Anuales por Km:</span>
+                                        <span className="font-medium">{costesUnitarios.costesKm.directosPorKm.toFixed(4)} €/Km</span>
+                                    </div>
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Indirectos Anuales por Km:</span>
+                                        <span className="font-medium">{costesUnitarios.costesKm.indirectosPorKm.toFixed(4)} €/Km</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        {/* Costes por servicio */}
+                        <div className="mb-6 resultado-card">
+                            <div className="bg-gray-50 p-3 rounded-t-lg border border-gray-200 mb-1">
+                                <h4 className="font-medium text-gray-700">Costes por servicio</h4>
+                            </div>
+                            <div className="bg-white rounded-b-lg shadow-sm border-x border-b border-gray-200">
+                                <div className="divide-y divide-gray-200">
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Fijos por Servicio:</span>
+                                        <span className="font-medium">{costesUnitarios.costesServicio.fijosPorServicio.toFixed(2)} €/Serv</span>
+                                    </div>
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Variables por Servicio:</span>
+                                        <span className="font-medium">{costesUnitarios.costesServicio.variablesPorServicio.toFixed(2)} €/Serv</span>
+                                    </div>
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Directos por Servicio:</span>
+                                        <span className="font-medium">{costesUnitarios.costesServicio.directosPorServicio.toFixed(2)} €/Serv</span>
+                                    </div>
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Indirectos por Servicio:</span>
+                                        <span className="font-medium">{costesUnitarios.costesServicio.indirectosPorServicio.toFixed(2)} €/Serv</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        {/* Costes por tiempo */}
+                        <div className="resultado-card">
+                            <div className="bg-gray-50 p-3 rounded-t-lg border border-gray-200 mb-1">
+                                <h4 className="font-medium text-gray-700">Costes por tiempo</h4>
+                            </div>
+                            <div className="bg-white rounded-b-lg shadow-sm border-x border-b border-gray-200">
+                                <div className="divide-y divide-gray-200">
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Fijos Por Días:</span>
+                                        <span className="font-medium">{costesUnitarios.costesTiempo.fijosPorDia.toFixed(2)} €/Día</span>
+                                    </div>
+                                    <div className="p-3 flex justify-between items-center">
+                                        <span className="text-gray-600">Costes Fijos Por Horas:</span>
+                                        <span className="font-medium">{costesUnitarios.costesTiempo.fijosPorHora.toFixed(2)} €/Hora</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
             
-            {/* Costes por kilómetro */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES TOTALES POR KILOMETRO {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between">
-                    <span>Costes Fijos por Km:</span>
-                    <span>{costesUnitarios.costesKm.fijosPorKm.toFixed(4)} €/Km</span>
+                    {/* Botones para acciones */}
+                    <div className="p-6 bg-gray-50 border-t border-gray-200 flex flex-col md:flex-row justify-center items-center gap-4 no-print">
+                        <Button
+                            className="bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 shadow-md transition-all w-full md:w-auto"
+                            onClick={() => setVistaDetallada(true)}
+                        >
+                            Cálculo Detallado
+                        </Button>
+                    </div>
+
                 </div>
-                <div className="flex justify-between">
-                    <span>Costes Variables por Km:</span>
-                    <span>{costesUnitarios.costesKm.variablesPorKm.toFixed(4)} €/Km</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Costes Directos Anuales por Km:</span>
-                    <span>{costesUnitarios.costesKm.directosPorKm.toFixed(4)} €/Km</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Costes Indirectos Anuales por Km:</span>
-                    <span>{costesUnitarios.costesKm.indirectosPorKm.toFixed(4)} €/Km</span>
-                </div>
-            </div>
-            
-            {/* Costes por servicio */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES TOTALES POR SERVICIO {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between">
-                    <span>Costes Fijos por Servicio:</span>
-                    <span>{costesUnitarios.costesServicio.fijosPorServicio.toFixed(2)} €/Serv</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Costes Variables por Servicio:</span>
-                    <span>{costesUnitarios.costesServicio.variablesPorServicio.toFixed(2)} €/Serv</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Costes Directos Anuales por Servicio:</span>
-                    <span>{costesUnitarios.costesServicio.directosPorServicio.toFixed(2)} €/Serv</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Costes Indirectos Anuales por Servicio:</span>
-                    <span>{costesUnitarios.costesServicio.indirectosPorServicio.toFixed(2)} €/Serv</span>
-                </div>
-            </div>
-            
-            {/* Costes por tiempo */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES POR TIEMPO {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between">
-                    <span>Costes Fijos Por Días:</span>
-                    <span>{costesUnitarios.costesTiempo.fijosPorDia.toFixed(2)} €/Día</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Costes Fijos Por Horas:</span>
-                    <span>{costesUnitarios.costesTiempo.fijosPorHora.toFixed(2)} €/Hora</span>
-                </div>
-            </div>
-            
-            {/* Botones para acciones */}
-            <div className="p-4 flex justify-center gap-4 print:hidden">
-                <Button
-                    onClick={imprimir}
-                    className="bg-gray-200 text-black border border-gray-300 hover:bg-gray-300"
-                >
-                    Imprimir
-                </Button>
-                <Button
-                    className="bg-blue-500 text-white hover:bg-blue-600"
-                    onClick={() => setVistaDetallada(true)}
-                >
-                    Cálculo Detallado
-                </Button>
-                <Button
-                    className="bg-green-500 text-white hover:bg-green-600"
-                >
-                    Resumen de resultados
-                </Button>
-            </div>
-        </div>
             )}
         </>
     );

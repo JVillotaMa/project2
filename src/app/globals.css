@@ -121,74 +121,14 @@
   body {
     @apply bg-background text-foreground;}}
 
-/* Estilos específicos para impresión */
+/* Estilos básicos para impresión (los estilos completos están en print.css) */
 @media print {
-  /* Ocultar botones y elementos no necesarios para impresión */
-  button {
-    display: none !important;
-  }
+  /* Estilos básicos para impresión - el resto están en print.css */
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
   
-  /* Asegurar que el contenido se muestre en una sola página */
-  .print-container {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  /* Eliminar sombras y bordes innecesarios */
-  .print-container * {
-    box-shadow: none !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  
-  /* Ajustar el layout para la impresión */
-  .print-flex-row {
-    display: flex !important;
-    flex-direction: row !important;
-  }
-  
-  /* Ajustar tamaños para impresión */
-  .print-width-full {
-    width: 100% !important;
-  }
-  
-  .print-width-half {
-    width: 50% !important;
-  }
-  
-  /* Ocultar elementos específicos */
-  .no-print {
-    display: none !important;
-  }
-  
-  /* Forzar el fondo blanco y texto negro */
-  body {
-    background: white !important;
-    color: black !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  /* Evitar cortes en elementos importantes */
-  svg, .chart-container {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    max-height: 300px !important;
-    height: auto !important;
-  }
-
-  /* Eliminar el scroll */
-  html, body {
-    overflow: visible !important;
-  }
-
-  /* Control de tamaño */
-  @page {
-    size: auto;
-    margin: 10mm;
-  }
+  /* Clases de utilidad */
+  .print-flex-row { display: flex !important; }
+  .print-width-full { width: 100% !important; }
+  .print-width-half { width: 50% !important; }
 }

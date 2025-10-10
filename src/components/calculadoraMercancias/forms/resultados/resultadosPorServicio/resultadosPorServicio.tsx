@@ -1,3 +1,4 @@
+'use client'
 import {
     costeAnualAmortizacion,
     precioNeto,
@@ -12,8 +13,8 @@ import {
     costeVariablePeajes
 } from '../calculos'
 import { useMercanciasForm } from "@/lib/calculadoraMercancias/MercanciasFormContext";
-import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
+import { Button } from "@/components/ui/button";
 
 
 export default function ResultadosPorServicio({ horasServicio, kilometrosServicio }: { horasServicio: number, kilometrosServicio: number }) {
@@ -138,142 +139,156 @@ export default function ResultadosPorServicio({ horasServicio, kilometrosServici
     // Calcular todos los costes para el servicio
     const costesPorServicio = calcularCostesPorServicio();
     const desglose = costesPorServicio.desgloseCostes;
-    
-    // Función para imprimir
-    const imprimir = () => {
-        window.print();
-    };
 
     return (
-        <div ref={resultadosRef} className="print:shadow-none mx-auto max-w-[800px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-300 font-mono text-sm">
-            {/* Cabecera */}
-            <div className="text-center p-2 border-b border-gray-400">
-                <div className="text-lg font-bold">{tipoVehiculo}</div>
-                <div className="border-b border-dashed border-gray-500 mx-auto w-3/4 my-1"></div>
+        <div ref={resultadosRef} className="print-container w-full bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 font-sans">
+            {/* Cabecera para impresión */}
+            
+            {/* Cabecera con gradiente (visible solo en pantalla) */}
+            <div className="bg-gradient-to-r from-primary-600 to-primary-400 text-white p-4 shadow-md no-print">
+                <div className="text-center">
+                    <h2 className="text-xl font-bold text-black">{tipoVehiculo}</h2>
+                </div>
             </div>
             
             {/* Título y descripción del servicio */}
-            <div className="p-4">
-                <div className="font-bold">Resultado del cálculo de costes</div>
-                <div className="mt-2">
-                    Costes calculados para un servicio de<br />
-                    {kilometrosServicio} kilómetros y {horasServicio} horas
+            <div className="p-6 bg-gray-50 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-800 mb-4">Datos del servicio</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 resultado-card">
+                        <div className="text-sm text-gray-500 mb-1">Kilómetros</div>
+                        <div className="text-lg font-semibold">{kilometrosServicio} km</div>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 resultado-card">
+                        <div className="text-sm text-gray-500 mb-1">Horas</div>
+                        <div className="text-lg font-semibold">{horasServicio} h</div>
+                    </div>
                 </div>
             </div>
             
-            {/* Costes fijos */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES FIJOS {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between">
-                    <span>Amortización:</span>
-                    <span>{desglose.fijos.amortizacion.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Financiación:</span>
-                    <span>{desglose.fijos.financiacion.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Personal:</span>
-                    <span>{desglose.fijos.personal.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Cargas fiscales:</span>
-                    <span>{desglose.fijos.impuestos.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Seguros Vehículo:</span>
-                    <span>{desglose.fijos.seguro.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Otros Gastos Fijos:</span>
-                    <span>{desglose.fijos.otrosCostesFijos.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between font-bold">
-                    <span>Total Costes Fijos:</span>
-                    <span>{desglose.fijos.totalFijos.toFixed(2)} €</span>
-                </div>
-            </div>
-            
-            {/* Costes variables */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES VARIABLES {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between">
-                    <span>Coste Anual Combustible:</span>
-                    <span>{desglose.variables.combustible.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Coste Anual Dietas:</span>
-                    <span>{desglose.variables.dietas.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Coste Anual Neumáticos:</span>
-                    <span>{desglose.variables.neumaticos.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Coste Anual Mantenimiento y Rep:</span>
-                    <span>{desglose.variables.mantenimiento.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Coste Anual Peajes:</span>
-                    <span>{desglose.variables.peajes.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between font-bold">
-                    <span>Total Costes Variables:</span>
-                    <span>{desglose.variables.totalVariables.toFixed(2)} €</span>
-                </div>
-            </div>
-            
-            {/* Costes directos */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES DIRECTOS {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between font-bold">
-                    <span>Total Costes Directos del Servicio:</span>
-                    <span>{costesPorServicio.costeTotalDirectoServicio.toFixed(2)} €</span>
-                </div>
-            </div>
-            
-            {/* Costes indirectos */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES INDIRECTOS {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between">
-                    <span>Costes Indirectos:</span>
-                    <span>{costesPorServicio.costeIndirectoServicio.toFixed(2)} €</span>
+            {/* Secciones de costes */}
+            <div className="p-6">
+                <div className="grid grid-cols-1 gap-8">
+                    {/* Costes fijos */}
+                    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden resultado-card">
+                        <div className="bg-gradient-to-r from-blue-50 to-white p-4 border-b border-gray-200">
+                            <h4 className="font-medium text-gray-800">Costes Fijos</h4>
+                        </div>
+                        
+                        <div className="divide-y divide-gray-100">
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Amortización:</span>
+                                <span className="font-medium">{desglose.fijos.amortizacion.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Financiación:</span>
+                                <span className="font-medium">{desglose.fijos.financiacion.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Personal:</span>
+                                <span className="font-medium">{desglose.fijos.personal.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Cargas fiscales:</span>
+                                <span className="font-medium">{desglose.fijos.impuestos.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Seguros Vehículo:</span>
+                                <span className="font-medium">{desglose.fijos.seguro.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Otros Gastos Fijos:</span>
+                                <span className="font-medium">{desglose.fijos.otrosCostesFijos.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center bg-gray-50">
+                                <span className="text-gray-800 font-medium">Total Costes Fijos:</span>
+                                <span className="font-bold text-lg">{desglose.fijos.totalFijos.toFixed(2)} €</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Costes variables */}
+                    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden resultado-card">
+                        <div className="bg-gradient-to-r from-green-50 to-white p-4 border-b border-gray-200">
+                            <h4 className="font-medium text-gray-800">Costes Variables</h4>
+                        </div>
+                        
+                        <div className="divide-y divide-gray-100">
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Combustible:</span>
+                                <span className="font-medium">{desglose.variables.combustible.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Dietas:</span>
+                                <span className="font-medium">{desglose.variables.dietas.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Neumáticos:</span>
+                                <span className="font-medium">{desglose.variables.neumaticos.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Mantenimiento y Reparaciones:</span>
+                                <span className="font-medium">{desglose.variables.mantenimiento.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center hover:bg-gray-50">
+                                <span className="text-gray-600">Peajes:</span>
+                                <span className="font-medium">{desglose.variables.peajes.toFixed(2)} €</span>
+                            </div>
+                            <div className="p-3 flex justify-between items-center bg-gray-50">
+                                <span className="text-gray-800 font-medium">Total Costes Variables:</span>
+                                <span className="font-bold text-lg">{desglose.variables.totalVariables.toFixed(2)} €</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Costes directos e indirectos */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden resultado-card">
+                            <div className="bg-gradient-to-r from-gray-50 to-white p-4 border-b border-gray-200">
+                                <h4 className="font-medium text-gray-800">Costes Directos</h4>
+                            </div>
+                            <div className="p-4 flex justify-between items-center">
+                                <span className="text-gray-800 font-medium">Total Costes Directos:</span>
+                                <span className="font-bold text-lg">{costesPorServicio.costeTotalDirectoServicio.toFixed(2)} €</span>
+                            </div>
+                        </div>
+                        
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden resultado-card">
+                            <div className="bg-gradient-to-r from-purple-50 to-white p-4 border-b border-gray-200">
+                                <h4 className="font-medium text-gray-800">Costes Indirectos</h4>
+                            </div>
+                            <div className="p-4 flex justify-between items-center">
+                                <span className="text-gray-600">Costes Indirectos:</span>
+                                <span className="font-medium">{costesPorServicio.costeIndirectoServicio.toFixed(2)} €</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             {/* Costes totales */}
-            <div className="border-t border-b border-dashed border-gray-500 px-4 py-1 text-center">
-                <span>{Array(24).fill('*').join('')} COSTES TOTALES {Array(24).fill('*').join('')}</span>
-            </div>
-            
-            <div className="px-4 py-2">
-                <div className="flex justify-between font-bold">
-                    <span>Costes Totales:</span>
-                    <span>{costesPorServicio.costeTotalServicio.toFixed(2)} €</span>
+            <div className="p-6 bg-gray-50 border-t border-gray-200">
+                <h3 className="text-lg font-medium text-gray-800 mb-4">Costes Totales</h3>
+                
+                <div className="bg-white p-5 rounded-lg shadow-md border border-gray-200 resultado-card">
+                    <div className="flex flex-col sm:flex-row justify-between items-center">
+                        <div className="text-sm text-gray-500 mb-2 sm:mb-0">Coste total del servicio</div>
+                        <div className="text-2xl font-bold text-gray-800">{costesPorServicio.costeTotalServicio.toFixed(2)} €</div>
+                    </div>
                 </div>
             </div>
             
-            {/* Botón de imprimir */}
-            <div className="p-4 flex justify-center print:hidden">
+            {/* Botón de imprimir y opciones */}
+            <div className="p-6 bg-gray-50 border-t border-gray-200 flex flex-col md:flex-row justify-center items-center gap-4 no-print">
                 <Button
-                    onClick={imprimir}
-                    className="bg-gray-200 text-black border border-gray-300 hover:bg-gray-300"
+                    variant="outline"
+                    className="border border-gray-300 bg-gray-100 text-black w-full md:w-auto"
+                    onClick={() => window.location.reload()}
                 >
-                    Imprimir
+                    Nuevo Cálculo
                 </Button>
             </div>
+
         </div>
     );
 }

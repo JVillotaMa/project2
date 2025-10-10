@@ -14,8 +14,8 @@ function precioNeto(precioBruto:number,descuentoSobreTarifa:number){
 }
 
 function costeAnualFinanciacion(Cuantia:number,TAE:number,plazoAnios:number){
-    const interesTotal = (Cuantia * (TAE/100)) * plazoAnios
-    return interesTotal/plazoAnios
+    const cuotaAmortizacionFrancesa = (Cuantia*TAE/100)/(1 - Math.pow(1 + TAE/100,-plazoAnios))
+    return cuotaAmortizacionFrancesa
 }
 
 function costeFijoPersonal(retribucionAnualConductor:number,seguridadSocial:number,plusDeAsistencia:number){
